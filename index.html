@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi Nutrición">
+<meta name="theme-color" content="#4a6e4e">
+<title>Mi Plan Nutricional</title>
+<style>
+:root{
+  --sage:#7a9e7e;--sage-dark:#4a6e4e;--sage-light:#a8c5a0;
+  --cream:#f4f0ea;--terra:#c4835a;
+  --ink:#1e2820;--muted:#6b7c6e;--card:#ffffff;
+  --border:rgba(122,158,126,0.18);
+  --nav-h:68px;--safe:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,'Segoe UI',sans-serif;background:var(--cream);color:var(--ink);}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 40% at 10% 0%,rgba(122,158,126,.2) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 50% at 90% 90%,rgba(196,131,90,.12) 0%,transparent 60%);}
+#app{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;}
+
+/* INSTALL OVERLAY */
+#install-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(160deg,#4a6e4e 0%,#2d5a32 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 28px;text-align:center;
+}
+#install-overlay.hidden{display:none;}
+.io-logo{font-size:5rem;margin-bottom:16px;line-height:1;}
+.io-title{font-size:2rem;font-weight:800;color:white;line-height:1.15;margin-bottom:8px;}
+.io-title em{font-style:italic;opacity:.85;}
+.io-sub{font-size:.9rem;color:rgba(255,255,255,.75);margin-bottom:36px;line-height:1.5;}
+.io-btn{
+  width:100%;background:white;color:#2d5a32;border:none;
+  border-radius:18px;padding:18px 24px;
+  font-size:1.1rem;font-weight:800;font-family:inherit;
+  cursor:pointer;margin-bottom:12px;
+  box-shadow:0 8px 28px rgba(0,0,0,.25);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .15s,box-shadow .15s;
+}
+.io-btn:active{transform:scale(.97);box-shadow:0 4px 14px rgba(0,0,0,.2);}
+.io-skip{
+  background:transparent;border:none;color:rgba(255,255,255,.6);
+  font-size:.85rem;font-family:inherit;cursor:pointer;padding:8px;
+  text-decoration:underline;
+}
+.io-steps{
+  margin-top:28px;background:rgba(255,255,255,.12);border-radius:16px;
+  padding:16px 18px;width:100%;text-align:left;
+}
+.io-steps-title{color:white;font-size:.78rem;font-weight:700;margin-bottom:10px;opacity:.9;}
+.io-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;color:rgba(255,255,255,.8);font-size:.78rem;line-height:1.45;}
+.io-step:last-child{margin-bottom:0;}
+.io-num{width:20px;height:20px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:white;flex-shrink:0;margin-top:1px;}
+
+/* SCREENS */
+.scr{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  padding-bottom:calc(var(--nav-h) + var(--safe) + 20px);scrollbar-width:none;}
+.scr::-webkit-scrollbar{display:none;}
+.scr.active{display:block;}
+
+/* NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + var(--safe));padding-bottom:var(--safe);
+  background:rgba(255,255,255,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;
+  z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.07);}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--muted);
+  font-family:inherit;transition:color .2s;}
+.nb .ni{font-size:1.3rem;line-height:1;transition:transform .2s;}
+.nb .nl{font-size:.6rem;font-weight:600;letter-spacing:.03em;}
+.nb.active{color:var(--sage-dark);}
+.nb.active .ni{transform:scale(1.12);}
+
+/* SHARED */
+.ph{padding:52px 20px 14px;position:sticky;top:0;z-index:10;
+  background:linear-gradient(to bottom,var(--cream) 82%,transparent);}
+.ph h1{font-size:1.65rem;font-weight:800;line-height:1.15;color:var(--ink);}
+.ph h1 em{font-style:italic;color:var(--sage-dark);}
+.ph p{font-size:.78rem;color:var(--muted);margin-top:3px;}
+.st{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--sage-dark);padding:0 20px;margin:20px 0 8px;}
+.card{background:var(--card);border-radius:18px;margin:0 16px 12px;
+  box-shadow:0 2px 14px rgba(0,0,0,.055);overflow:hidden;}
+.ib{background:var(--card);border-radius:16px;margin:0 16px 10px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);overflow:hidden;}
+.ibt{padding:12px 16px 9px;font-size:.76rem;font-weight:700;color:var(--sage-dark);
+  border-bottom:1px solid var(--border);}
+.ir{padding:9px 16px;border-bottom:1px solid rgba(122,158,126,.08);
+  display:flex;align-items:flex-start;gap:8px;font-size:.8rem;color:#3a4a3e;line-height:1.45;}
+.ir:last-child{border-bottom:none;}
+.ir::before{content:'→';color:var(--sage);font-size:.74rem;margin-top:1px;flex-shrink:0;}
+.ir strong{color:var(--ink);}
+.wb{background:rgba(196,131,90,.07);border:1.5px solid rgba(196,131,90,.25);
+  border-radius:16px;margin:0 16px 10px;overflow:hidden;}
+.wb .ibt{color:var(--terra);border-bottom-color:rgba(196,131,90,.2);}
+
+/* HOY */
+.hh{padding:46px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.hg{font-size:.75rem;color:var(--muted);font-weight:500;margin-bottom:3px;}
+.ht{font-size:1.8rem;font-weight:800;line-height:1.1;color:var(--ink);}
+.ht em{font-style:italic;color:var(--sage-dark);}
+.dc{background:var(--sage-dark);color:white;border-radius:12px;padding:8px 13px;text-align:center;flex-shrink:0;}
+.dc .dn{font-size:1.35rem;font-weight:800;line-height:1;}
+.dc .dm{font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;opacity:.82;}
+.mstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:13px;
+  margin:13px 16px 0;background:var(--card);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+.mp{text-align:center;}
+.mp .mv{font-size:1.2rem;font-weight:800;color:var(--ac,var(--sage-dark));line-height:1;}
+.mp .mu{font-size:.58rem;color:var(--muted);text-transform:uppercase;margin-top:1px;}
+.mp .ml{font-size:.6rem;color:var(--muted);margin-top:2px;}
+.mr2{display:flex;align-items:flex-start;gap:11px;padding:12px 15px;
+  border-bottom:1px solid rgba(122,158,126,.09);}
+.mr2:last-child{border-bottom:none;}
+.mi{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#c8e6c9,#7a9e7e);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.mb2{flex:1;min-width:0;}
+.mt2{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--sage-dark);margin-bottom:2px;}
+.md2{font-size:.79rem;color:#3a4a3e;line-height:1.43;}
+.mk{font-size:.68rem;font-weight:700;background:rgba(122,158,126,.12);
+  color:var(--sage-dark);padding:2px 7px;border-radius:16px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.wc{margin:0 16px 12px;background:linear-gradient(135deg,#e8f4ea,#d0e8d2);border-radius:16px;padding:13px 15px;}
+.wt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--sage-dark);margin-bottom:9px;}
+.wg{display:flex;gap:5px;flex-wrap:wrap;}
+.gl{width:33px;height:33px;border-radius:8px;border:2px solid rgba(74,110,78,.3);
+  background:white;display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;cursor:pointer;transition:all .15s;user-select:none;}
+.gl.on{background:var(--sage-dark);border-color:var(--sage-dark);}
+.wl{font-size:.72rem;color:var(--sage-dark);margin-top:7px;font-weight:600;}
+.woc{margin:0 16px 12px;border-radius:16px;overflow:hidden;}
+.woi{background:var(--sage-dark);padding:14px 15px;display:flex;align-items:center;gap:11px;}
+.woe{font-size:1.7rem;}
+.wot h3{color:white;font-size:.9rem;font-weight:700;margin-bottom:2px;}
+.wot p{color:rgba(255,255,255,.73);font-size:.73rem;}
+.wok{margin-left:auto;width:33px;height:33px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.45);background:transparent;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:.95rem;color:white;transition:all .2s;flex-shrink:0;user-select:none;}
+.wok.done{background:white;color:var(--sage-dark);border-color:white;}
+
+/* SEMANA */
+.ds{display:flex;gap:7px;padding:0 16px 4px;overflow-x:auto;scrollbar-width:none;}
+.ds::-webkit-scrollbar{display:none;}
+.dc2{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 12px;
+  border-radius:12px;border:2px solid var(--border);background:var(--card);
+  cursor:pointer;flex-shrink:0;transition:all .2s;min-width:48px;}
+.dc2 .dcn{font-size:.63rem;font-weight:700;text-transform:uppercase;color:var(--muted);}
+.dc2 .dcd{font-size:1rem;font-weight:700;color:var(--ink);}
+.dc2.active{background:var(--sage-dark);border-color:var(--sage-dark);}
+.dc2.active .dcn,.dc2.active .dcd{color:white;}
+.dc2.hoy2{border-color:var(--sage);}
+
+/* MACROS */
+.mh{margin:0 16px 12px;background:var(--sage-dark);border-radius:20px;padding:18px 17px;color:white;}
+.mh h2{font-size:1.2rem;font-weight:800;margin-bottom:2px;}
+.mh p{font-size:.76rem;opacity:.8;}
+.mbig{font-size:2.6rem;font-weight:800;line-height:1;margin:7px 0 2px;}
+.mbig span{font-size:.95rem;font-weight:400;opacity:.72;}
+.mbl{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px;margin-bottom:12px;}
+.mblk{background:var(--card);border-radius:14px;padding:13px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);border-top:3px solid var(--ac);}
+.mblk .bv{font-size:1.6rem;font-weight:800;color:var(--ac);line-height:1;}
+.mblk .bu{font-size:.66rem;color:var(--muted);text-transform:uppercase;margin:2px 0 4px;}
+.mblk .bd{font-size:.71rem;color:#4a5e4e;line-height:1.38;}
+.tr{padding:9px 16px;border-bottom:1px solid rgba(122,158,126,.08);display:flex;align-items:center;gap:9px;}
+.tr:last-child{border-bottom:none;}
+.tt{font-size:.71rem;font-weight:700;color:var(--sage-dark);min-width:74px;}
+.tw{font-size:.78rem;color:#3a4a3e;flex:1;}
+.tk{font-size:.68rem;font-weight:700;background:rgba(122,158,126,.12);
+  color:var(--sage-dark);padding:2px 6px;border-radius:10px;white-space:nowrap;}
+
+/* TIPS */
+.tc{background:var(--card);border-radius:14px;margin:0 16px 10px;
+  border-left:4px solid var(--sage);box-shadow:0 2px 8px rgba(0,0,0,.05);padding:13px;}
+.tc .ti{font-size:1.2rem;margin-bottom:4px;}
+.tc strong{display:block;font-size:.81rem;color:var(--sage-dark);font-weight:700;margin-bottom:3px;}
+.tc p{font-size:.78rem;color:#4a5e4e;line-height:1.48;}
+.rc{background:linear-gradient(135deg,var(--sage-dark),#2d5a32);border-radius:14px;
+  margin:0 16px 10px;padding:15px;color:white;}
+.rc h3{font-size:.95rem;font-weight:800;margin-bottom:9px;}
+.rr{display:flex;gap:9px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.77rem;}
+.rr:last-child{border-bottom:none;}
+.rw{font-weight:700;opacity:.88;min-width:84px;}
+.rx{opacity:.78;}
+
+/* COMPRAS */
+.cc{margin:0 16px 13px;background:var(--sage-dark);border-radius:17px;padding:15px 17px;color:white;}
+.cl{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.78;margin-bottom:3px;}
+.ct{font-size:2rem;font-weight:800;line-height:1;}
+.cs{font-size:.73rem;opacity:.72;padding-bottom:3px;}
+.cch{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px;}
+.cp{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;font-size:.68rem;}
+.fr{display:flex;gap:5px;padding:0 16px;margin-bottom:11px;overflow-x:auto;scrollbar-width:none;}
+.fr::-webkit-scrollbar{display:none;}
+.fb{padding:6px 13px;border-radius:18px;border:1.5px solid var(--border);
+  background:var(--card);color:var(--muted);font-size:.72rem;font-weight:600;
+  font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;}
+.fb.active{background:var(--sage-dark);color:white;border-color:var(--sage-dark);}
+.fb.rst{border-color:rgba(196,131,90,.4);color:var(--terra);}
+.gs{font-size:.63rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--sage-dark);padding:5px 16px 3px;margin-top:8px;}
+.gw{margin:0 16px 4px;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.gi{display:flex;align-items:center;gap:11px;padding:11px 13px;
+  background:var(--card);border-bottom:1px solid rgba(122,158,126,.07);
+  cursor:pointer;transition:background .12s;user-select:none;}
+.gi:last-child{border-bottom:none;}
+.gi.chk{background:rgba(122,158,126,.07);}
+.gi.chk .gn{text-decoration:line-through;color:var(--muted);}
+.gck{width:25px;height:25px;border-radius:7px;border:2px solid rgba(122,158,126,.4);
+  background:white;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.82rem;font-weight:800;color:transparent;transition:all .15s;}
+.gi.chk .gck{background:var(--sage-dark);border-color:var(--sage-dark);color:white;}
+.gbod{flex:1;min-width:0;}
+.gn{font-size:.82rem;font-weight:600;color:var(--ink);}
+.gq{font-size:.69rem;font-weight:700;color:var(--sage-dark);margin:1px 0;}
+.gd{font-size:.69rem;color:var(--muted);line-height:1.38;}
+.gr{text-align:right;flex-shrink:0;}
+.gpr{font-size:.7rem;font-weight:700;white-space:nowrap;}
+.gpr.buy{color:var(--terra);}
+.gpr.have{color:#2d6a4f;}
+.gtg{font-size:.58rem;font-weight:700;padding:2px 5px;border-radius:8px;white-space:nowrap;margin-top:2px;display:inline-block;}
+.gtg.buy{background:rgba(196,131,90,.12);color:var(--terra);}
+.gtg.have{background:rgba(45,106,79,.1);color:#2d6a4f;}
+.sbox{margin:4px 16px 10px;background:rgba(122,158,126,.1);border-radius:13px;
+  padding:12px 14px;border:1px solid rgba(122,158,126,.2);}
+.sbox .st2{font-size:.74rem;font-weight:700;color:var(--sage-dark);margin-bottom:4px;}
+.sbox .sb{font-size:.74rem;color:#3a4a3e;line-height:1.55;}
+
+@keyframes fu{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+.fi{animation:fu .28s ease both;}
+</style>
+</head>
+<body>
+
+<!-- PANTALLA DE INSTALACIÓN -->
+<div id="install-overlay">
+  <div class="io-logo">🌿</div>
+  <div class="io-title">Mi Plan<br><em>Nutricional</em></div>
+  <p class="io-sub">Agrega esta app a tu pantalla de inicio para acceder siempre a tu plan del día, menú semanal y lista de compras.</p>
+
+  <!-- Android -->
+  <div id="android-steps" style="width:100%;">
+    <button class="io-btn" onclick="document.getElementById('install-overlay').classList.add('hidden')">
+      <span style="font-size:1.4rem;">▶</span> Entrar a la app
+    </button>
+    <div class="io-steps">
+      <div class="io-steps-title">📲 Para anclarlo a tu pantalla de inicio:</div>
+      <div class="io-step"><div class="io-num">1</div><span>Toca los <strong>tres puntos ⋮</strong> arriba a la derecha en Chrome</span></div>
+      <div class="io-step"><div class="io-num">2</div><span>Toca <strong>"Agregar a pantalla de inicio"</strong></span></div>
+      <div class="io-step"><div class="io-num">3</div><span>Toca <strong>"Agregar"</strong> y aparece el ícono 🌿 en tu inicio</span></div>
+    </div>
+    <button class="io-skip" onclick="document.getElementById('install-overlay').classList.add('hidden')">Saltar por ahora →</button>
+  </div>
+</div>
+
+<div id="app">
+<!-- HOY -->
+<div id="s-hoy" class="scr active">
+  <div class="hh">
+    <div>
+      <div class="hg" id="greet">Buenos días ☀️</div>
+      <div class="ht">Tu día de<br><em id="hdia">hoy</em></div>
+    </div>
+    <div class="dc"><div class="dn" id="hnum">—</div><div class="dm" id="hmes">—</div></div>
+  </div>
+  <div class="mstrip">
+    <div class="mp"><div class="mv" style="--ac:var(--sage-dark)">1.650</div><div class="mu">kcal</div><div class="ml">Objetivo</div></div>
+    <div class="mp"><div class="mv" style="--ac:#52b788">110g</div><div class="mu">Prot</div><div class="ml">Proteína</div></div>
+    <div class="mp"><div class="mv" style="--ac:var(--terra)">179g</div><div class="mu">Carbs</div><div class="ml">Carbos</div></div>
+    <div class="mp"><div class="mv" style="--ac:#a8c5a0">55g</div><div class="mu">Grasas</div><div class="ml">Grasas</div></div>
+  </div>
+  <div class="st">🍽️ Comidas de hoy</div>
+  <div class="card"><div id="hcomidas"></div></div>
+  <div class="st">💧 Agua del día</div>
+  <div class="wc">
+    <div class="wt">Meta: 8 vasos — 2,5 L días de ejercicio</div>
+    <div class="wg" id="wg"></div>
+    <div class="wl" id="wl">0 / 8 vasos</div>
+  </div>
+  <div class="st">🏃‍♀️ Ejercicio de hoy</div>
+  <div class="woc">
+    <div class="woi">
+      <div class="woe" id="we">🏋️</div>
+      <div class="wot"><h3 id="wt">Fuerza</h3><p id="wd">Sentadillas · Planchas · Lunges · 30 min</p></div>
+      <div class="wok" id="wok" onclick="toggleWo()">○</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEMANA -->
+<div id="s-semana" class="scr">
+  <div class="ph"><h1>Menú de la <em>Semana</em></h1><p>Toca un día para ver sus comidas</p></div>
+  <div class="ds" id="ds"></div>
+  <div class="st" id="stitle">🍽️ Lunes</div>
+  <div class="card"><div id="scomidas"></div></div>
+</div>
+
+<!-- MACROS -->
+<div id="s-macros" class="scr">
+  <div class="ph"><h1>Tus <em>Macros</em></h1><p>Plan para recomposición corporal</p></div>
+  <div class="mh">
+    <h2>Calorías diarias</h2>
+    <p>Déficit leve · Pierde grasa preservando músculo</p>
+    <div class="mbig">1.650 <span>kcal/día</span></div>
+    <p style="font-size:.71rem;opacity:.68;margin-top:3px">Gasto real ~1.950–2.000 kcal · Déficit ~300–350 kcal</p>
+  </div>
+  <div class="mbl">
+    <div class="mblk" style="--ac:#52b788"><div class="bv">110g</div><div class="bu">Proteína ↑</div><div class="bd">2g/kg peso. Esencial para tonificar.</div></div>
+    <div class="mblk" style="--ac:var(--terra)"><div class="bv">179g</div><div class="bu">Carbohidratos</div><div class="bd">Altos en desayuno/almuerzo, bajos en cena.</div></div>
+    <div class="mblk" style="--ac:#a8c5a0"><div class="bv">55g</div><div class="bu">Grasas</div><div class="bd">Palta, maní, huevo, chía.</div></div>
+    <div class="mblk" style="--ac:var(--sage-dark)"><div class="bv">2.5L</div><div class="bu">Agua</div><div class="bd">Días de ejercicio. 2L días de descanso.</div></div>
+  </div>
+  <div class="st">⏰ Horario de comidas</div>
+  <div class="ib">
+    <div class="tr"><div class="tt">🌅 7–9 am</div><div class="tw">Desayuno — proteína + carbo</div><div class="tk">~450 kcal</div></div>
+    <div class="tr"><div class="tt">☀️ 12–2 pm</div><div class="tw">Almuerzo — legumbres + proteína</div><div class="tk">~550 kcal</div></div>
+    <div class="tr"><div class="tt">🍎 4–5 pm</div><div class="tw">Colación — yogur + maní + fruta</div><div class="tk">~230 kcal</div></div>
+    <div class="tr"><div class="tt">🌙 7–8 pm</div><div class="tw">Cena — proteica, baja en carbos</div><div class="tk">~420 kcal</div></div>
+  </div>
+  <div class="st">⚠️ Nutrientes críticos</div>
+  <div class="wb">
+    <div class="ibt">⚡ Siendo vegetariana, prioriza esto</div>
+    <div class="ir"><strong>Hierro:</strong> legumbres siempre con limón — triplica la absorción.</div>
+    <div class="ir"><strong>B12:</strong> solo en huevos y lácteos. No descuides el consumo diario.</div>
+    <div class="ir"><strong>Zinc:</strong> garbanzos, porotos, semillas de zapallo.</div>
+    <div class="ir"><strong>Calcio:</strong> lácteos, brócoli, chía.</div>
+    <div class="ir"><strong>Proteína completa:</strong> combina legumbres + huevo o lácteos.</div>
+  </div>
+  <div style="height:8px"></div>
+</div>
+
+<!-- TIPS -->
+<div id="s-tips" class="scr">
+  <div class="ph"><h1>Consejos de <em>Tonificación</em></h1><p>Lo que marca la diferencia real</p></div>
+  <div class="st">💪 Ejercicio</div>
+  <div class="tc"><div class="ti">🏋️</div><strong>Mezcla fuerza y cardio</strong><p>Lun/Mié/Vie: fuerza (sentadillas, planchas, lunges, glúteos). Mar/Jue/Sáb: cardio (saltar cuerda, caminata). Forma músculo y quema grasa a la vez.</p></div>
+  <div class="tc"><div class="ti">⚡</div><strong>Proteína post-entrenamiento</strong><p>En los 30 min después de entrenar: 2 huevos, yogur griego o leche con avena. Es cuando el músculo más la necesita.</p></div>
+  <div class="tc"><div class="ti">😴</div><strong>El descanso construye músculo</strong><p>Sin 7–8 horas de sueño sube el cortisol y acumulas grasa abdominal.</p></div>
+  <div class="st">🍽️ Alimentación</div>
+  <div class="tc"><div class="ti">🌙</div><strong>Cenas bajas en carbos</strong><p>Una cena proteica (huevo + tofu + verduras) activa la quema de grasa nocturna.</p></div>
+  <div class="tc"><div class="ti">🍽️</div><strong>Orden de los alimentos</strong><p>Come siempre: <strong>verdura → proteína → carbohidrato</strong>.</p></div>
+  <div class="tc"><div class="ti">📅</div><strong>Meal prep dominical</strong><p>Cada domingo cocina legumbres para la semana. Deja huevos cocidos listos. Ahorra 30%.</p></div>
+  <div class="st">📏 Progreso</div>
+  <div class="tc"><div class="ti">📏</div><strong>Mídete, no solo te peses</strong><p>Mide cintura, caderas y muslos cada 3 semanas. Ahí está el progreso real.</p></div>
+  <div class="rc">
+    <h3>⏱ ¿Cuándo verás resultados?</h3>
+    <div class="rr"><div class="rw">Semana 1–2</div><div class="rx">Más energía, menos hinchazón, mejor sueño</div></div>
+    <div class="rr"><div class="rw">Semana 3–4</div><div class="rx">Ropa diferente, más fuerza</div></div>
+    <div class="rr"><div class="rw">Semana 6–8</div><div class="rx">Cambio visible en composición corporal</div></div>
+    <div class="rr"><div class="rw">Semana 10–12</div><div class="rx">Recomposición notable y sostenible</div></div>
+  </div>
+  <div style="height:8px"></div>
+</div>
+
+<!-- COMPRAS -->
+<div id="s-compras" class="scr">
+  <div class="ph"><h1>Lista de <em>Compras</em></h1><p>Cantidades exactas para 1 mes</p></div>
+  <div class="cc">
+    <div class="cl">Aún necesitas comprar</div>
+    <div style="display:flex;align-items:flex-end;gap:7px;flex-wrap:wrap;">
+      <div class="ct" id="cdin">$81.850</div>
+      <div class="cs" id="csub">sin descontar nada aún</div>
+    </div>
+    <div class="cch">
+      <div class="cp">✓ <span id="cnt-h">0</span> tienes</div>
+      <div class="cp">🛒 <span id="cnt-b">0</span> a comprar</div>
+      <div class="cp">☑️ <span id="cnt-c">0</span> marcados</div>
+    </div>
+  </div>
+  <div class="fr">
+    <button class="fb active" onclick="sf('all',this)">Todos</button>
+    <button class="fb" onclick="sf('buy',this)">Solo comprar</button>
+    <button class="fb" onclick="sf('have',this)">Ya tengo</button>
+    <button class="fb" onclick="sf('checked',this)">Marcados ☑️</button>
+    <button class="fb rst" onclick="rc2()">↺ Reiniciar</button>
+  </div>
+  <div id="gl"></div>
+  <div class="sbox">
+    <div class="st2">🏪 Estrategia de compra mensual</div>
+    <div class="sb"><b>Supermercado (1x/mes):</b> huevos, tofu, yogur, avena, leche, soya, garbanzos, maní, chía.<br><b>Feria libre (1x/semana):</b> verduras y frutas — hasta 50% más barato.<br><b>Ya en casa:</b> arroz, fideos, porotos, lentejas, pan Bimbo, nori.</div>
+  </div>
+  <div class="wb" style="margin-bottom:16px;">
+    <div class="ibt" style="color:var(--terra)">🌟 Soya texturizada — ingrediente estrella</div>
+    <div class="ir">50g proteína por 100g seco. La fuente más económica: ~$1.800/kg.</div>
+    <div class="ir">Hidrata 10 min en agua caliente, saltea con ajo y verduras.</div>
+    <div class="ir">La encuentras en Líder, Tottus, Jumbo o tiendas naturistas.</div>
+  </div>
+  <div style="height:8px"></div>
+</div>
+
+<!-- NAV -->
+<nav class="bnav">
+  <button class="nb active" onclick="go('hoy',this)"><span class="ni">🌿</span><span class="nl">Hoy</span></button>
+  <button class="nb" onclick="go('semana',this)"><span class="ni">🍽️</span><span class="nl">Semana</span></button>
+  <button class="nb" onclick="go('macros',this)"><span class="ni">📊</span><span class="nl">Macros</span></button>
+  <button class="nb" onclick="go('tips',this)"><span class="ni">💪</span><span class="nl">Consejos</span></button>
+  <button class="nb" onclick="go('compras',this)"><span class="ni">🛒</span><span class="nl">Compras</span></button>
+</nav>
+</div>
+
+<script>
+var menu=[
+  {dia:"Lunes",c:[
+    {i:"🌅",t:"Desayuno",d:"Gachas de avena (50g) con leche + 2 huevos revueltos + ½ plátano",k:"~450 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Lentejas (70g seco) + soya texturizada salteada + brócoli + papas. Con limón.",k:"~550 kcal"},
+    {i:"🍎",t:"Colación",d:"Yogur griego (155g) + 15g mantequilla de maní + ½ plátano",k:"~230 kcal"},
+    {i:"🌙",t:"Cena",d:"Tofu firme (100g) + 1 huevo + espinacas + tomate. Sin carbos.",k:"~420 kcal"}
+  ]},
+  {dia:"Martes",c:[
+    {i:"🌅",t:"Desayuno",d:"Panqueques de avena (50g + 2 huevos + leche) + ½ plátano + 15g maní",k:"~455 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Tofu firme (150g) + porotos negros (70g seco) + zanahoria + fideos. Con limón.",k:"~545 kcal"},
+    {i:"🍎",t:"Colación",d:"Yogur griego (155g) + 15g mantequilla de maní + ½ plátano",k:"~230 kcal"},
+    {i:"🌙",t:"Cena",d:"2 huevos revueltos + espinacas salteadas + tomate.",k:"~410 kcal"}
+  ]},
+  {dia:"Miércoles",c:[
+    {i:"🌅",t:"Desayuno",d:"Gachas de avena (50g) con leche + 2 huevos revueltos + manzana + chía",k:"~445 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Soya texturizada (60g seco) + garbanzos (70g seco) + zapallo asado + arroz blanco. Con limón.",k:"~555 kcal"},
+    {i:"🧇",t:"Colación",d:"Tostadas de pan integral con quesillo, tomate y orégano + yogur griego",k:"~240 kcal"},
+    {i:"🌙",t:"Cena",d:"Omelette 2 huevos con queso + espinacas + tomate. Sin carbos.",k:"~415 kcal"}
+  ]},
+  {dia:"Jueves",c:[
+    {i:"🌅",t:"Desayuno",d:"Panqueques de avena (50g + 2 huevos + leche) + manzana + 15g maní",k:"~450 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Lentejas (70g seco) + porotos verdes al vapor + camote asado. Con limón.",k:"~540 kcal"},
+    {i:"🍎",t:"Colación",d:"Yogur griego (155g) + 15g mantequilla de maní + ½ plátano",k:"~230 kcal"},
+    {i:"🌙",t:"Cena",d:"Soya texturizada (40g seco) salteada con ajo + espinacas + 1 huevo al final.",k:"~420 kcal"}
+  ]},
+  {dia:"Viernes",c:[
+    {i:"🌅",t:"Desayuno",d:"Gachas de avena (50g) con leche + 2 huevos pochados + ½ palta",k:"~455 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Tofu firme (150g) + porotos negros (70g seco) + brócoli + papa. Con limón.",k:"~545 kcal"},
+    {i:"🍎",t:"Colación",d:"Yogur griego (155g) + 15g mantequilla de maní + ½ plátano",k:"~230 kcal"},
+    {i:"🌙",t:"Cena",d:"2 huevos a la plancha + acelga salteada con ajo + tomate. Sin carbos.",k:"~415 kcal"}
+  ]},
+  {dia:"Sábado",c:[
+    {i:"🌅",t:"Desayuno",d:"Gachas de avena (50g) con leche + 2 huevos revueltos + naranja",k:"~445 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Soya texturizada (60g seco) + garbanzos (70g seco) + zanahoria + brócoli. Con limón.",k:"~540 kcal"},
+    {i:"🌰",t:"Colación",d:"Yogur griego + puñado de nueces o maní natural + 1 fruta",k:"~235 kcal"},
+    {i:"🌙",t:"Cena",d:"Tofu firme (100g) + 1 huevo + espinacas + tomate. Sin carbos.",k:"~420 kcal"}
+  ]},
+  {dia:"Domingo",c:[
+    {i:"🌅",t:"Desayuno",d:"Panqueques de avena (50g + 2 huevos + leche) + plátano + 15g maní",k:"~455 kcal"},
+    {i:"☀️",t:"Almuerzo",d:"Soya texturizada (60g seco) + porotos negros (70g seco) + verduras. Con limón.",k:"~545 kcal"},
+    {i:"🥚",t:"Colación",d:"Huevos revueltos con queso y tomate en pan integral tostado + yogur",k:"~340 kcal"},
+    {i:"🌙",t:"Cena",d:"2 huevos duros + espinacas + tomate. Batch cooking: cocina legumbres para la semana.",k:"~310 kcal"}
+  ]}
+];
+var wo=[
+  {e:"🏋️",t:"Fuerza",d:"Sentadillas · Planchas · Lunges · Glúteos · 30 min"},
+  {e:"🏃",t:"Cardio",d:"Saltar cuerda o caminata rápida · 30 min"},
+  {e:"🏋️",t:"Fuerza",d:"Sentadillas · Planchas · Lunges · Glúteos · 30 min"},
+  {e:"🏃",t:"Cardio",d:"Saltar cuerda o caminata rápida · 30 min"},
+  {e:"🏋️",t:"Fuerza",d:"Sentadillas · Planchas · Lunges · Glúteos · 30 min"},
+  {e:"🏃",t:"Cardio",d:"Saltar cuerda o caminata rápida · 30 min"},
+  {e:"😌",t:"Descanso activo",d:"Caminata suave + meal prep semanal de legumbres"}
+];
+var gdata=[
+  {cat:"🥚 Proteínas",items:[
+    {id:"huevos",n:"Huevos",q:"120 unidades / mes",d:"~27/semana — desayuno, cenas y colaciones",p:"$12.000",cost:12000},
+    {id:"lentejas",n:"Lentejas secas",q:"1 kg / mes",d:"~210g/semana seco — lunes, jueves, viernes",p:"$1.000",cost:1000},
+    {id:"porotos",n:"Porotos negros/blancos",q:"1 kg / mes",d:"~210g/semana seco — martes, viernes, domingo",p:"$900",cost:900},
+    {id:"garb",n:"Garbanzos secos",q:"1 kg / mes",d:"~140g/semana seco — miércoles y sábado",p:"$950",cost:950},
+    {id:"soya",n:"Soya texturizada fina",q:"1,5 kg / mes",d:"~280g/semana seco — 4 días a la semana",p:"$2.700",cost:2700},
+    {id:"tofu",n:"Tofu firme",q:"6 bloques de ~350g",d:"~500g/semana — lunes, martes, viernes, sábado",p:"$9.000",cost:9000},
+    {id:"yogur",n:"Yogur griego natural",q:"9 potes de 500g",d:"155g al día en la colación — sin azúcar",p:"$10.800",cost:10800},
+    {id:"leche",n:"Leche descremada",q:"5 litros / mes",d:"~150ml al día para avena y panqueques",p:"$3.500",cost:3500}
+  ]},
+  {cat:"🌾 Carbohidratos",items:[
+    {id:"avena",n:"Avena instantánea",q:"2 kg / mes",d:"50g al día — desayuno base diario",p:"$2.000",cost:2000},
+    {id:"arroz",n:"Arroz blanco",q:"Ya tienes",d:"Máx 2 veces/semana — miércoles y sábado",p:"—",cost:0},
+    {id:"fideos",n:"Fideos",q:"Ya tienes",d:"Variar carbos en almuerzo del martes",p:"—",cost:0},
+    {id:"bimbo",n:"Pan Bimbo",q:"Ya tienes",d:"Con moderación — 1 rebanada opcional",p:"—",cost:0},
+    {id:"papa",n:"Papa y/o camote",q:"3 kg / mes",d:"~600g/semana — lunes, jueves y domingo",p:"$1.800",cost:1800},
+    {id:"platano",n:"Plátanos",q:"~15 unidades / mes",d:"½ plátano al día en colación y desayuno",p:"~$2.500",cost:2500}
+  ]},
+  {cat:"🥦 Verduras — feria semanal",items:[
+    {id:"espinaca",n:"Espinaca / Acelga",q:"~4,5 kg / mes",d:"Cenas proteicas todos los días",p:"~$4.000/sem",cost:17200},
+    {id:"tomate",n:"Tomates",q:"~47 unidades / mes",d:"~11/semana — cenas y almuerzos",p:"Feria",cost:0},
+    {id:"zanahoria",n:"Zanahoria / Zapallo",q:"Compra semanal",d:"Guisos de almuerzo 2–3 veces/semana",p:"Feria",cost:0},
+    {id:"brocoli",n:"Brócoli / Zapallo italiano",q:"Compra semanal",d:"Acompañamiento de almuerzos",p:"Feria",cost:0}
+  ]},
+  {cat:"🍋 Frutas — feria semanal",items:[
+    {id:"limon",n:"Limones",q:"~30 unidades / mes",d:"1 limón por almuerzo — absorción del hierro",p:"Feria",cost:0},
+    {id:"frutas",n:"Naranjas / Manzanas",q:"Compra semanal",d:"Colación y desayuno según el día",p:"Feria",cost:10750}
+  ]},
+  {cat:"🥑 Grasas y extras",items:[
+    {id:"palta",n:"Paltas",q:"2 a 3 unidades / mes",d:"¼ palta en desayuno viernes y colaciones",p:"~$1.500",cost:1500},
+    {id:"mani",n:"Mantequilla de maní natural",q:"2 frascos de 400g / mes",d:"15g al día — sin azúcar añadida",p:"$7.000",cost:7000},
+    {id:"chia",n:"Semillas de chía",q:"500g (dura 2–3 meses)",d:"5g al día en el desayuno — omega-3 + fibra",p:"$750",cost:750},
+    {id:"nori",n:"Algas nori",q:"Ya tienes",d:"Snack bajo en calorías + yodo",p:"—",cost:0},
+    {id:"panim",n:"Pan integral",q:"1 pan / mes",d:"Colaciones de miércoles y domingo",p:"$1.500",cost:1500}
+  ]}
+];
+
+// STATE
+var today=new Date();
+var ti=today.getDay()===0?6:today.getDay()-1;
+var sd=ti,woDone=false,cf="all";
+var chk={};
+try{chk=JSON.parse(localStorage.getItem("chk")||"{}");}catch(e){chk={};}
+if(!localStorage.getItem("chk")){
+  ["arroz","fideos","bimbo","nori","huevos","lentejas","porotos"].forEach(function(id){chk[id]=true;});
+  try{localStorage.setItem("chk",JSON.stringify(chk));}catch(e){}
+}
+
+// Ocultar overlay si ya visitó antes
+if(localStorage.getItem("visited")){
+  document.getElementById("install-overlay").classList.add("hidden");
+}
+localStorage.setItem("visited","1");
+
+function go(id,btn){
+  document.querySelectorAll(".scr").forEach(function(s){s.classList.remove("active");});
+  document.querySelectorAll(".nb").forEach(function(b){b.classList.remove("active");});
+  document.getElementById("s-"+id).classList.add("active");
+  if(btn)btn.classList.add("active");
+  if(id==="semana")renderSemana(sd);
+  if(id==="compras")rg();
+}
+
+function initHoy(){
+  var h=today.getHours();
+  document.getElementById("greet").textContent=h<12?"Buenos días ☀️":h<19?"Buenas tardes 🌤️":"Buenas noches 🌙";
+  var dias=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+  var meses=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  document.getElementById("hdia").textContent=dias[ti];
+  document.getElementById("hnum").textContent=today.getDate();
+  document.getElementById("hmes").textContent=meses[today.getMonth()];
+  var html="";
+  menu[ti].c.forEach(function(c){
+    html+='<div class="mr2"><div class="mi">'+c.i+'</div><div class="mb2"><div class="mt2">'+c.t+'</div><div class="md2">'+c.d+'</div></div><div class="mk">'+c.k+'</div></div>';
+  });
+  document.getElementById("hcomidas").innerHTML=html;
+  var w=wo[ti];
+  document.getElementById("we").textContent=w.e;
+  document.getElementById("wt").textContent=w.t;
+  document.getElementById("wd").textContent=w.d;
+  var wg=document.getElementById("wg");
+  for(var i=0;i<8;i++){
+    var g=document.createElement("div");
+    g.className="gl";g.textContent="💧";
+    g.onclick=(function(n){return function(){setWater(n+1);};})(i);
+    wg.appendChild(g);
+  }
+}
+function setWater(n){
+  document.querySelectorAll(".gl").forEach(function(g,i){g.classList.toggle("on",i<n);});
+  document.getElementById("wl").textContent=n>=8?"¡Meta cumplida! 🎉":n>=5?n+" / 8 vasos · ¡Vas bien!":n+" / 8 vasos";
+}
+function toggleWo(){
+  woDone=!woDone;
+  var b=document.getElementById("wok");
+  b.textContent=woDone?"✓":"○";
+  b.classList.toggle("done",woDone);
+}
+
+function initSemana(){
+  var sc=document.getElementById("ds");
+  var ini=["L","M","X","J","V","S","D"];
+  var start=new Date(today);start.setDate(today.getDate()-ti);
+  for(var i=0;i<7;i++){
+    var d=new Date(start);d.setDate(start.getDate()+i);
+    var ch=document.createElement("div");
+    ch.className="dc2"+(i===ti?" hoy2":"")+(i===sd?" active":"");
+    ch.innerHTML='<div class="dcn">'+ini[i]+'</div><div class="dcd">'+d.getDate()+'</div>';
+    ch.onclick=(function(idx){return function(){renderSemana(idx);};})(i);
+    sc.appendChild(ch);
+  }
+}
+function renderSemana(idx){
+  sd=idx;
+  var dias=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+  document.querySelectorAll(".dc2").forEach(function(c,i){c.classList.toggle("active",i===idx);});
+  document.getElementById("stitle").textContent="🍽️ "+dias[idx];
+  var html="";
+  menu[idx].c.forEach(function(c){
+    html+='<div class="mr2 fi"><div class="mi">'+c.i+'</div><div class="mb2"><div class="mt2">'+c.t+'</div><div class="md2">'+c.d+'</div></div><div class="mk">'+c.k+'</div></div>';
+  });
+  document.getElementById("scomidas").innerHTML=html;
+}
+
+function sc2(){try{localStorage.setItem("chk",JSON.stringify(chk));}catch(e){}}
+function sf(f,btn){
+  cf=f;
+  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("active");});
+  if(btn)btn.classList.add("active");
+  rg();
+}
+function rc2(){
+  if(confirm("¿Reiniciar todos los checks?")){chk={};sc2();rg();}
+}
+function rg(){
+  var con=document.getElementById("gl");
+  if(!con)return;
+  var total=0,checked=0,costo=0;
+  gdata.forEach(function(s){s.items.forEach(function(i){
+    total++;
+    if(chk[i.id])checked++;
+    else costo+=i.cost||0;
+  });});
+  var cd=document.getElementById("cdin");
+  if(cd)cd.textContent="$"+costo.toLocaleString("es-CL");
+  var cs=document.getElementById("csub");
+  if(cs)cs.textContent=checked===0?"sin descontar nada aún":"descontando lo que ya tienes";
+  var hE=document.getElementById("cnt-h");
+  var bE=document.getElementById("cnt-b");
+  var cE=document.getElementById("cnt-c");
+  if(hE)hE.textContent=checked+" tienes";
+  if(bE)bE.textContent=(total-checked)+" a comprar";
+  if(cE)cE.textContent=checked+" marcados";
+  var html="";
+  gdata.forEach(function(sec){
+    var fil=sec.items.filter(function(it){
+      var c=!!chk[it.id];
+      if(cf==="buy")return !c;
+      if(cf==="have"||cf==="checked")return c;
+      return true;
+    });
+    if(fil.length===0)return;
+    html+='<div class="gs">'+sec.cat+'</div><div class="gw">';
+    fil.forEach(function(it){
+      var c=!!chk[it.id];
+      var dt=c?"have":"buy";
+      html+='<div class="gi'+(c?" chk":"")+'" data-id="'+it.id+'">';
+      html+='<div class="gck">'+(c?"&#10003;":"")+'</div>';
+      html+='<div class="gbod"><div class="gn">'+it.n+'</div><div class="gq">'+it.q+'</div><div class="gd">'+it.d+'</div></div>';
+      html+='<div class="gr"><div class="gpr '+dt+'">'+it.p+'</div><div class="gtg '+dt+'">'+(c?"&#10003; Tengo":"&#128722; Comprar")+'</div></div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  });
+  if(!html)html='<div style="text-align:center;padding:28px 20px;color:var(--muted);font-size:.83rem;">No hay ítems en esta categoría.</div>';
+  con.innerHTML=html;
+  con.onclick=function(e){
+    var el=e.target.closest("[data-id]");
+    if(!el)return;
+    var id=el.getAttribute("data-id");
+    if(!id)return;
+    chk[id]=!chk[id];
+    sc2();
+    rg();
+  };
+}
+
+initHoy();
+initSemana();
+rg();
+</script>
+</body>
+</html>
