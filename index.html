@@ -184,37 +184,40 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .racha-info{flex:1;}
 .racha-n{font-size:.82rem;font-weight:700;color:var(--ink);}
 .racha-s{font-size:.68rem;color:var(--muted);}
-/* DARK MODE */
-body.dark{--cream:#181e1a;--card:#222a24;--ink:#e6e6e4;--muted:#909090;--border:rgba(150,160,150,0.22);}
-body.dark::before{opacity:.25;}
-body.dark .bnav{background:rgba(26,32,28,.98);}
-body.dark .ph{background:linear-gradient(to bottom,#181e1a 85%,transparent);}
-body.dark .mstrip{background:#222a24;}
-/* Textos con color fijo — neutros en oscuro */
+/* DARK MODE — negro puro, sin matices */
+body.dark{--cream:#111111;--card:#1c1c1e;--ink:#f0f0f0;--muted:#8e8e93;--border:rgba(255,255,255,0.1);}
+body.dark::before{opacity:0;}
+body.dark .bnav{background:rgba(17,17,17,.99);border-top-color:rgba(255,255,255,.08);}
+body.dark .ph{background:linear-gradient(to bottom,#111111 85%,transparent);}
+body.dark .mstrip{background:#1c1c1e;}
+/* Textos con color fijo — blanco neutro */
 body.dark .md2,body.dark .ir,body.dark .tw,body.dark .tc p,
 body.dark .sb,body.dark .bd,body.dark .rx,body.dark .gd,
-body.dark .rec-ing li,body.dark .rec-steps li{color:#c0c0bc;}
-body.dark .rr{color:#b0b0ac;}
-body.dark .gn{color:#e6e6e4;}
-/* Cards y contenedores */
-body.dark .card,body.dark .ib,body.dark .tc,body.dark .racha-bar{background:#222a24;}
-body.dark .gi{background:#222a24;}
-body.dark .gi.chk{background:rgba(122,158,126,.15);}
-body.dark .wc{background:rgba(34,42,36,.85);}
-body.dark .sbox{background:rgba(34,42,36,.8);border-color:rgba(122,158,126,.15);}
-body.dark .wb{background:rgba(196,131,90,.06);border-color:rgba(196,131,90,.18);}
-body.dark .woc .woi{background:#364840;}
-body.dark .rec-card{background:#222a24;}
-body.dark .rec-tip{background:rgba(196,131,90,.06);border-color:rgba(196,131,90,.18);color:#c8a070;}
-body.dark .dc2{background:#222a24;}
+body.dark .rec-ing li,body.dark .rec-steps li{color:#c8c8c8;}
+body.dark .rr{color:#b8b8b8;}
+body.dark .gn{color:#f0f0f0;}
+/* Cards y contenedores — gris neutro */
+body.dark .card,body.dark .ib,body.dark .tc,body.dark .racha-bar{background:#1c1c1e;}
+body.dark .gi{background:#1c1c1e;}
+body.dark .gi.chk{background:#2c2c2e;}
+body.dark .wc{background:#1c1c1e;border:1px solid rgba(255,255,255,.08);}
+body.dark .wc .wt{color:#8e8e93;}
+body.dark .sbox{background:#1c1c1e;border-color:rgba(255,255,255,.08);}
+body.dark .wb{background:#1c1c1e;border-color:rgba(255,255,255,.1);}
+body.dark .woc .woi{background:#2c2c2e;}
+body.dark .rec-card{background:#1c1c1e;}
+body.dark .rec-tip{background:#2c2c2e;border-color:rgba(255,255,255,.08);color:#c8a070;}
+body.dark .dc2{background:#1c1c1e;border-color:rgba(255,255,255,.1);}
 body.dark .dc2.active{background:var(--sage-dark);}
+body.dark .gw{box-shadow:none;}
 /* Checkbox comidas */
-body.dark .comida-chk{background:#1e261f;border-color:rgba(200,230,200,.25);}
+body.dark .comida-chk{background:#2c2c2e;border-color:rgba(255,255,255,.18);}
 /* Nota */
-body.dark .nota-ta{background:#1e261f;color:#ddeedd;border-color:rgba(122,158,126,.25);}
+body.dark .nota-ta{background:#1c1c1e;color:#f0f0f0;border-color:rgba(255,255,255,.12);}
 /* Settings */
-body.dark #settings-box{background:#222a24;}
-body.dark .io-btn{color:#2d5a32;}
+body.dark #settings-box{background:#1c1c1e;}
+body.dark .toggle-wrap{background:rgba(255,255,255,.15);}
+body.dark .io-btn{color:#1a1a1a;}
 /* SETTINGS BUTTON */
 #settings-btn{position:fixed;top:14px;right:16px;z-index:200;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.13);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.05rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
 body.dark #settings-btn{background:rgba(34,42,36,.95);}
