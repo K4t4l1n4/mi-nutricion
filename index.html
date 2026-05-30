@@ -34,8 +34,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .scr{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe) + 20px);scrollbar-width:none;}
 .scr::-webkit-scrollbar{display:none;}
 .scr.active{display:block;}
-.bnav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe));padding-bottom:var(--safe);background:rgba(255,255,255,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.07);}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--muted);font-family:inherit;transition:color .2s;}
+.bnav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe));padding-bottom:var(--safe);background:rgba(255,255,255,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.07);overflow-x:auto;scrollbar-width:none;}
+.bnav::-webkit-scrollbar{display:none;}
+.nb{flex:0 0 54px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--muted);font-family:inherit;transition:color .2s;}
 .nb .ni{font-size:1.3rem;line-height:1;transition:transform .2s;}
 .nb .nl{font-size:.6rem;font-weight:600;letter-spacing:.03em;}
 .nb.active{color:var(--sage-dark);}
@@ -154,6 +155,114 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .sbox .sb{font-size:.74rem;color:#3a4a3e;line-height:1.55;}
 @keyframes fu{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
 .fi{animation:fu .28s ease both;}
+/* BATCH COOKING */
+.bc-hero{background:var(--sage-dark);padding:52px 16px 32px;position:relative;overflow:hidden;}
+.bc-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);}
+.bc-inner{position:relative;z-index:1;}
+.bc-tag{display:inline-block;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:4px 11px;border-radius:100px;margin-bottom:12px;}
+.bc-hero h1{font-family:Georgia,serif;font-size:2rem;font-weight:900;color:white;line-height:1.05;margin-bottom:9px;}
+.bc-hero h1 em{font-style:italic;font-weight:400;color:#e8a870;}
+.bc-sub{color:rgba(255,255,255,.65);font-size:.84rem;line-height:1.55;}
+.bc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+.bc-chip{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-size:.7rem;font-weight:500;padding:4px 10px;border-radius:100px;}
+.bc-body{padding:16px 16px 80px;}
+.bc-sh{display:flex;align-items:center;gap:10px;margin:32px 0 12px;}
+.bc-sh-ic{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.bc-sh h2{font-family:Georgia,serif;font-size:1.25rem;font-weight:700;color:var(--ink);}
+.bc-sh p{font-size:.74rem;color:var(--muted);margin-top:2px;}
+.bc-alert{background:#fff8ee;border:1.5px solid #e8c878;border-radius:13px;padding:12px 15px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;}
+.bc-alert-ic{font-size:1.05rem;flex-shrink:0;margin-top:1px;}
+.bc-alert-txt{font-size:.79rem;color:#6a5010;line-height:1.55;}
+.bc-alert-txt strong{color:#4a3800;}
+body.dark .bc-alert{background:#252010;border-color:#6a5010;}
+body.dark .bc-alert-txt{color:#c8a050;}
+body.dark .bc-alert-txt strong{color:#e8c070;}
+.bc-ig{background:var(--card);border-radius:15px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:12px;border:1px solid rgba(90,122,94,.1);}
+.bc-ig-head{padding:10px 15px;display:flex;align-items:center;gap:9px;background:var(--sage-dark);color:white;}
+.bc-ig-head span{font-size:1.05rem;}
+.bc-ig-head h3{font-size:.82rem;font-weight:700;}
+.bc-ig-head p{font-size:.68rem;opacity:.75;}
+.bc-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:10px 15px;border-bottom:1px solid rgba(90,122,94,.08);align-items:center;}
+.bc-row:last-child{border-bottom:none;}
+.bc-rn{font-size:.82rem;font-weight:600;color:var(--ink);}
+.bc-rs{font-size:.68rem;color:var(--muted);margin-top:1px;}
+.bc-qty{font-family:Georgia,serif;font-size:1rem;font-weight:700;color:var(--sage-dark);white-space:nowrap;}
+.bc-unit{font-size:.64rem;color:var(--muted);text-align:right;margin-top:2px;}
+.tg{font-size:.59rem;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;}
+.tg-c{background:rgba(90,122,94,.12);color:var(--sage-dark);}
+.tg-r{background:rgba(196,112,58,.1);color:var(--terra);}
+.tg-cr{background:rgba(150,150,150,.12);color:var(--muted);}
+.tg-n{background:rgba(200,168,80,.15);color:#7a6010;}
+body.dark .tg-c{background:rgba(90,122,94,.25);color:#7ac07e;}
+body.dark .tg-r{background:rgba(196,112,58,.2);color:#d09060;}
+body.dark .tg-cr{background:rgba(200,200,200,.1);color:#909090;}
+body.dark .tg-n{background:rgba(200,168,80,.2);color:#c8a050;}
+body.dark .bc-ig{background:#1c1c1e;border-color:rgba(255,255,255,.08);}
+body.dark .bc-row{border-bottom-color:rgba(255,255,255,.06);}
+body.dark .bc-rn{color:#f0f0f0;}
+body.dark .bc-qty{color:#7ac07e;}
+.bc-tl{position:relative;padding-left:24px;margin-bottom:6px;}
+.bc-tl::before{content:'';position:absolute;left:8px;top:20px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--sage-light),transparent);}
+.bc-step{position:relative;margin-bottom:11px;}
+.bc-step::before{content:'';position:absolute;left:-18px;top:12px;width:9px;height:9px;border-radius:50%;background:var(--sage);border:2px solid var(--cream);box-shadow:0 0 0 2px var(--sage-light);}
+body.dark .bc-step::before{border-color:#111111;}
+.bc-sc{background:var(--card);border-radius:13px;padding:12px 14px;box-shadow:0 2px 9px rgba(0,0,0,.05);border:1px solid rgba(90,122,94,.1);}
+body.dark .bc-sc{background:#1c1c1e;border-color:rgba(255,255,255,.08);}
+.bc-st{font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--sage);margin-bottom:3px;}
+body.dark .bc-st{color:#7ac07e;}
+.bc-stt{font-weight:700;font-size:.86rem;color:var(--ink);margin-bottom:4px;}
+body.dark .bc-stt{color:#f0f0f0;}
+.bc-sd{font-size:.77rem;color:var(--muted);line-height:1.5;}
+body.dark .bc-sd{color:#c8c8c8;}
+.bc-sd strong{color:var(--ink);}
+body.dark .bc-sd strong{color:#f0f0f0;}
+.bc-tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:8px;margin-bottom:6px;}
+.bc-tp{background:var(--card);border-radius:13px;padding:12px;border:2px solid var(--border);box-shadow:0 2px 7px rgba(0,0,0,.04);}
+.bc-tp.urg{border-color:#d4a820;background:#fffcf0;}
+body.dark .bc-tp{background:#1c1c1e;border-color:rgba(255,255,255,.1);}
+body.dark .bc-tp.urg{background:#252010;border-color:#8a6010;}
+.bc-tp-day{font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px;}
+.bc-tp.urg .bc-tp-day{color:#7a6010;}
+body.dark .bc-tp.urg .bc-tp-day{color:#c8a050;}
+.bc-tp-meal{font-size:.68rem;color:var(--terra);font-weight:600;margin-bottom:4px;}
+.bc-tp-name{font-family:Georgia,serif;font-size:.92rem;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.2;}
+body.dark .bc-tp-name{color:#f0f0f0;}
+.bc-tp-qty{font-size:.8rem;font-weight:700;color:var(--sage-dark);}
+body.dark .bc-tp-qty{color:#7ac07e;}
+.bc-tp-note{font-size:.64rem;color:var(--muted);margin-top:3px;line-height:1.38;}
+.bc-week{display:flex;flex-direction:column;gap:8px;}
+.bc-day{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 2px 9px rgba(0,0,0,.04);border:1px solid rgba(90,122,94,.08);}
+body.dark .bc-day{background:#1c1c1e;border-color:rgba(255,255,255,.08);}
+.bc-dh{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(90,122,94,.08);}
+body.dark .bc-dh{border-bottom-color:rgba(255,255,255,.07);}
+.bc-dn{width:34px;height:34px;background:var(--sage-dark);color:white;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:1rem;font-weight:900;flex-shrink:0;}
+.bc-dn.urg{background:var(--terra);}
+.bc-dname{font-weight:700;font-size:.88rem;color:var(--ink);}
+body.dark .bc-dname{color:#f0f0f0;}
+.bc-db{margin-left:auto;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;}
+.bc-db.u{background:rgba(196,112,58,.12);color:var(--terra);}
+.bc-db.n{background:rgba(90,122,94,.1);color:var(--sage-dark);}
+.bc-db.l{background:rgba(200,168,80,.15);color:#7a5010;}
+body.dark .bc-db.n{color:#7ac07e;}
+body.dark .bc-db.l{color:#c8a050;}
+.bc-meals{padding:10px 14px;display:flex;flex-direction:column;gap:6px;}
+.bc-m{display:flex;gap:8px;align-items:flex-start;}
+.bc-ml{font-size:.59rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sage);min-width:56px;margin-top:2px;flex-shrink:0;}
+body.dark .bc-ml{color:#7ac07e;}
+.bc-mt{font-size:.77rem;color:var(--muted);line-height:1.45;}
+body.dark .bc-mt{color:#c8c8c8;}
+.bc-mt .bt{color:var(--sage-dark);font-weight:600;}
+body.dark .bc-mt .bt{color:#7ac07e;}
+.bc-mt .fr{color:var(--terra);font-weight:600;}
+.bc-tips{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:360px){.bc-tips{grid-template-columns:1fr;}}
+.bc-tip{background:var(--card);border-radius:13px;padding:12px;border:1px solid rgba(90,122,94,.1);box-shadow:0 2px 7px rgba(0,0,0,.04);}
+body.dark .bc-tip{background:#1c1c1e;border-color:rgba(255,255,255,.08);}
+.bc-tip-ic{font-size:1.2rem;margin-bottom:5px;}
+.bc-tip-t{font-size:.79rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+body.dark .bc-tip-t{color:#f0f0f0;}
+.bc-tip-txt{font-size:.71rem;color:var(--muted);line-height:1.5;}
+body.dark .bc-tip-txt{color:#c8c8c8;}
 /* RECETAS */
 .rec-card{background:var(--card);border-radius:16px;margin:0 16px 10px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow:hidden;}
 .rec-head{display:flex;align-items:center;gap:12px;padding:14px 15px;cursor:pointer;user-select:none;}
@@ -432,6 +541,139 @@ body.dark #settings-btn{background:rgba(34,42,36,.95);}
   </div>
   <div style="height:8px"></div>
 </div>
+<div id="s-batch" class="scr">
+  <div class="bc-hero">
+    <div class="bc-inner">
+      <div class="bc-tag">&#127807; Guia de preparacion semanal</div>
+      <h1>Batch Cooking<br><em>del Domingo</em></h1>
+      <p class="bc-sub">Todo lo que necesitas cocinar, porcionar y organizar en tappers para que tu semana sea automatica. Calculado al gramo.</p>
+      <div class="bc-chips">
+        <span class="bc-chip">&#9201; ~2 horas de cocina</span>
+        <span class="bc-chip">&#128230; 14 tappers aprox.</span>
+        <span class="bc-chip">&#128197; Lunes a Sabado cubierto</span>
+        <span class="bc-chip">&#9889; Sabado noche: remojar legumbres</span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-body">
+    <div class="bc-alert" style="margin-top:4px;">
+      <div class="bc-alert-ic">&#127769;</div>
+      <div class="bc-alert-txt"><strong>Sabado por la noche, antes de dormir:</strong> Deja remojando en agua fria por separado: <strong>140g lentejas + 140g porotos negros + 140g garbanzos</strong>. Necesitan 8-12 horas para reducir fitatos y ablandar.</div>
+    </div>
+    <div class="bc-sh"><div class="bc-sh-ic" style="background:rgba(90,122,94,.1)">&#128722;</div><div><h2>Insumos a reunir</h2><p>Todo lo que necesitas tener listo antes de empezar</p></div></div>
+    <div class="bc-ig">
+      <div class="bc-ig-head"><span>&#129752;</span><div><h3>Legumbres — remojar sabado noche</h3><p>Cocinar todas el domingo · Rinden el doble en cocido</p></div></div>
+      <div class="bc-row"><div><div class="bc-rn">Lentejas secas</div><div class="bc-rs">Lunes alm + Jueves alm</div></div><div><div class="bc-qty">140g</div><div class="bc-unit">seco</div></div><span class="tg tg-r">&#8594; ~350g cocido</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Porotos negros secos</div><div class="bc-rs">Martes alm + Viernes alm</div></div><div><div class="bc-qty">140g</div><div class="bc-unit">seco</div></div><span class="tg tg-r">&#8594; ~350g cocido</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Garbanzos secos</div><div class="bc-rs">Miercoles alm + Sabado alm</div></div><div><div class="bc-qty">140g</div><div class="bc-unit">seco</div></div><span class="tg tg-r">&#8594; ~350g cocido</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Soya texturizada fina</div><div class="bc-rs">Lun · Mie · Jue cena · Sab — hidratar cada dia</div></div><div><div class="bc-qty">220g</div><div class="bc-unit">seco total</div></div><span class="tg tg-n">hidratar cada dia</span></div>
+    </div>
+    <div class="bc-ig">
+      <div class="bc-ig-head"><span>&#127820;</span><div><h3>Verduras a cocinar en batch</h3><p>Organizar por durabilidad — las papas primero</p></div></div>
+      <div class="bc-row"><div><div class="bc-rn">Papas</div><div class="bc-rs">&#9888; Mas perecible — usar Lun + Vie</div></div><div><div class="bc-qty">400g</div><div class="bc-unit">con piel</div></div><span class="tg tg-c">hervir 20 min</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Brocoli</div><div class="bc-rs">Lunes + Viernes + Sabado alm (150g c/u)</div></div><div><div class="bc-qty">450g</div><div class="bc-unit">en ramitos</div></div><span class="tg tg-c">vapor 7-8 min</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Porotos verdes</div><div class="bc-rs">Jueves almuerzo</div></div><div><div class="bc-qty">150g</div><div class="bc-unit">limpios</div></div><span class="tg tg-c">vapor 6 min</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Camote</div><div class="bc-rs">Jueves almuerzo</div></div><div><div class="bc-qty">200g</div><div class="bc-unit">en cubos</div></div><span class="tg tg-c">horno 180° x 25 min</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Zapallo</div><div class="bc-rs">Miercoles almuerzo</div></div><div><div class="bc-qty">200g</div><div class="bc-unit">en cubos</div></div><span class="tg tg-c">horno 180° x 25 min</span></div>
+    </div>
+    <div class="bc-ig">
+      <div class="bc-ig-head"><span>&#129398;</span><div><h3>Tofu — porcionar, NO cocinar</h3><p>Se cocina cada dia · Guardar crudo en tappers</p></div></div>
+      <div class="bc-row"><div><div class="bc-rn">Tofu firme total</div><div class="bc-rs">Dividir en 4 porciones etiquetadas</div></div><div><div class="bc-qty">500g</div><div class="bc-unit">total</div></div><span class="tg tg-cr">crudo en tapper</span></div>
+    </div>
+    <div class="bc-ig">
+      <div class="bc-ig-head"><span>&#129388;</span><div><h3>Verduras de cena — NO pre-cocinar</h3><p>Lavar y guardar · Saltear 5 min cada noche</p></div></div>
+      <div class="bc-row"><div><div class="bc-rn">Espinaca fresca</div><div class="bc-rs">Todas las cenas (menos viernes)</div></div><div><div class="bc-qty">~770g</div><div class="bc-unit">semana</div></div><span class="tg tg-cr">lavar + guardar</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Acelga</div><div class="bc-rs">Solo viernes cena</div></div><div><div class="bc-qty">150g</div><div class="bc-unit"></div></div><span class="tg tg-cr">lavar + guardar</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Tomates</div><div class="bc-rs">Todas las cenas</div></div><div><div class="bc-qty">~560g</div><div class="bc-unit">semana</div></div><span class="tg tg-cr">cortar al momento</span></div>
+      <div class="bc-row"><div><div class="bc-rn">Zanahoria</div><div class="bc-rs">Martes almuerzo (en porotos)</div></div><div><div class="bc-qty">100g</div><div class="bc-unit"></div></div><span class="tg tg-cr">cortar el martes</span></div>
+    </div>
+    <div class="bc-alert"><div class="bc-alert-ic">&#127834;</div><div class="bc-alert-txt"><strong>Arroz y fideos: NO cocinar en batch.</strong> Arroz (70g seco) cocinarlo el miercoles. Fideos (80g seco) cocinarlo el martes. Si se preparan con dias de anticipacion, quedan gomosos.</div></div>
+    <div class="bc-sh"><div class="bc-sh-ic" style="background:rgba(196,112,58,.1)">&#9201;</div><div><h2>Orden de coccion</h2><p>Secuencia optima para hacer todo en ~2 horas</p></div></div>
+    <div class="bc-tl">
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 1 — 0 min</div><div class="bc-stt">&#128293; Prender el horno + poner legumbres</div><div class="bc-sd">Precalentar horno a <strong>180°C</strong>. Escurrir y enjuagar las tres legumbres. Poner cada una en su olla con agua fria (doble del volumen). Encender fuego medio-alto. Lentejas ~25 min, porotos ~40 min, garbanzos ~45 min.</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 2 — 10 min</div><div class="bc-stt">&#127820; Meter camote y zapallo al horno</div><div class="bc-sd">Cortar <strong>camote en cubos de 2cm</strong> y <strong>zapallo en cubos de 2cm</strong>. Fuente separada con un chorrito de agua (sin aceite). Al horno ~25 minutos.</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 3 — 15 min</div><div class="bc-stt">&#127820; Hervir papas</div><div class="bc-sd">Poner las <strong>400g de papas enteras con piel</strong> en agua fria con sal. Hervir ~20 min. Escurrir, enfriar y guardar enteras sin pelar. Duran 4 dias refrigeradas.</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 4 — 30 min</div><div class="bc-stt">&#9928; Vapor: brocoli y porotos verdes</div><div class="bc-sd"><strong>Brocoli en ramitos 7-8 min</strong> (verde brillante, al dente). <strong>Porotos verdes 6 min</strong>. Pasar de inmediato por agua fria para frenar coccion. Escurrir bien antes de guardar.</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 5 — 35 min</div><div class="bc-stt">&#129398; Porcionar el tofu</div><div class="bc-sd">Abrir el tofu, escurrir y secar con papel absorbente. Dividir en 4 bloques: <strong>100g · 150g · 150g · 100g</strong>. Guardar en tapper etiquetado. NO cocinar — se saltea cada dia (5 min).</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 6 — 45 min (horno listo)</div><div class="bc-stt">&#10003; Sacar horno + revisar legumbres</div><div class="bc-sd">Retirar camote y zapallo. Dejar enfriar. Las lentejas deben estar listas (~25 min). Los porotos y garbanzos necesitan 15-20 min mas.</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 7 — 60 min</div><div class="bc-stt">&#129388; Lavar verduras de cena</div><div class="bc-sd">Lavar bien <strong>toda la espinaca y acelga</strong> de la semana. Escurrir y guardar en tapper con papel absorbente (absorbe humedad, duran mas). Los tomates guardarlos enteros sin refrigerar.</div></div></div>
+      <div class="bc-step"><div class="bc-sc"><div class="bc-st">Paso 8 — 80 min</div><div class="bc-stt">&#128230; Escurrir y porcionar en tappers</div><div class="bc-sd">Escurrir porotos y garbanzos. Dejar enfriar ANTES de tapar (el vapor arruina la textura). Porcionar segun el plan de tappers. Etiquetar con dia y comida.</div></div></div>
+    </div>
+    <div class="bc-sh"><div class="bc-sh-ic" style="background:rgba(200,168,80,.15)">&#128230;</div><div><h2>Organizacion de tappers</h2><p>Etiquetar con dia y comida · Refrigerar todo</p></div></div>
+    <div class="bc-alert"><div class="bc-alert-ic">&#9888;</div><div class="bc-alert-txt"><strong>Importante:</strong> Dejar enfriar completamente antes de tapar y refrigerar. El vapor caliente dentro del tapper arruina la textura y acorta la durabilidad.</div></div>
+    <p style="font-size:.76rem;color:var(--muted);margin-bottom:12px;">Los tappers con &#11088; son los mas urgentes — comer primero.</p>
+    <div class="bc-tg">
+      <div class="bc-tp urg"><div class="bc-tp-day">&#11088; Lunes</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Lentejas cocidas</div><div class="bc-tp-qty">175g</div><div class="bc-tp-note">+ brocoli 150g aparte. Papa cocida aparte.</div></div>
+      <div class="bc-tp urg"><div class="bc-tp-day">&#11088; Lunes</div><div class="bc-tp-meal">Cena</div><div class="bc-tp-name">Tofu crudo</div><div class="bc-tp-qty">100g</div><div class="bc-tp-note">Saltear 5 min con espinaca al cenar.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Martes</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Porotos negros</div><div class="bc-tp-qty">175g</div><div class="bc-tp-note">+ Tofu 150g aparte (crudo). Fideos cocinar ese dia.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Martes</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Tofu crudo</div><div class="bc-tp-qty">150g</div><div class="bc-tp-note">Saltear ese dia con los porotos.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Miercoles</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Garbanzos cocidos</div><div class="bc-tp-qty">175g</div><div class="bc-tp-note">+ Zapallo asado aparte. Arroz cocinar ese dia.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Miercoles</div><div class="bc-tp-meal">Batch</div><div class="bc-tp-name">Zapallo asado</div><div class="bc-tp-qty">200g</div><div class="bc-tp-note">Para almuerzo del miercoles.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Jueves</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Lentejas cocidas</div><div class="bc-tp-qty">175g</div><div class="bc-tp-note">+ Porotos verdes 150g + Camote 200g aparte.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Jueves</div><div class="bc-tp-meal">Batch</div><div class="bc-tp-name">Camote asado</div><div class="bc-tp-qty">200g</div><div class="bc-tp-note">Para almuerzo del jueves.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Jueves</div><div class="bc-tp-meal">Batch</div><div class="bc-tp-name">Porotos verdes</div><div class="bc-tp-qty">150g</div><div class="bc-tp-note">Al vapor. Para almuerzo del jueves.</div></div>
+      <div class="bc-tp urg"><div class="bc-tp-day">&#11088; Viernes</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Porotos negros</div><div class="bc-tp-qty">175g</div><div class="bc-tp-note">+ Tofu 150g + Brocoli 150g + ultimas papas.</div></div>
+      <div class="bc-tp urg"><div class="bc-tp-day">&#11088; Viernes</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Tofu crudo</div><div class="bc-tp-qty">150g</div><div class="bc-tp-note">Saltear con porotos y brocoli ese dia.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Sabado</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Garbanzos cocidos</div><div class="bc-tp-qty">175g</div><div class="bc-tp-note">+ Brocoli 150g aparte. Soya hidratar esa manana.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Sabado</div><div class="bc-tp-meal">Cena</div><div class="bc-tp-name">Tofu crudo</div><div class="bc-tp-qty">100g</div><div class="bc-tp-note">Ultimo tapper de tofu de la semana.</div></div>
+    </div>
+    <p style="font-size:.76rem;font-weight:700;color:var(--ink);margin:14px 0 8px;">Tappers de verduras compartidas:</p>
+    <div class="bc-tg">
+      <div class="bc-tp"><div class="bc-tp-day">Lun + Vie</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Papas cocidas</div><div class="bc-tp-qty">400g</div><div class="bc-tp-note">200g para lunes (mas urgente), 200g para viernes.</div></div>
+      <div class="bc-tp"><div class="bc-tp-day">Lun + Vie + Sab</div><div class="bc-tp-meal">Almuerzo</div><div class="bc-tp-name">Brocoli al vapor</div><div class="bc-tp-qty">450g</div><div class="bc-tp-note">150g x 3 dias. Un tapper grande o dividir en 3.</div></div>
+    </div>
+    <div class="bc-sh"><div class="bc-sh-ic" style="background:rgba(90,122,94,.1)">&#128197;</div><div><h2>Tu semana organizada</h2><p>Lo que viene del batch vs. lo que cocinas en el momento</p></div></div>
+    <div class="bc-week">
+      <div class="bc-day"><div class="bc-dh"><div class="bc-dn urg">L</div><div><div class="bc-dname">Lunes</div></div><span class="bc-db u">&#9888; Comer papas hoy</span></div><div class="bc-meals">
+        <div class="bc-m"><div class="bc-ml">Desayuno</div><div class="bc-mt">Gachas de avena + leche + 2 huevos revueltos + platano <span class="fr">(cocinar)</span></div></div>
+        <div class="bc-m"><div class="bc-ml">Almuerzo</div><div class="bc-mt"><span class="bt">Lentejas (tapper)</span> + <span class="fr">Soya (hidratar esta manana)</span> + <span class="bt">Brocoli (tapper)</span> + <span class="bt">Papa cocida (tapper)</span>. Exprimir limon.</div></div>
+        <div class="bc-m"><div class="bc-ml">Colacion</div><div class="bc-mt">Yogur griego + mani + platano</div></div>
+        <div class="bc-m"><div class="bc-ml">Cena</div><div class="bc-mt"><span class="bt">Tofu 100g (crudo)</span> saltear 5 min + <span class="fr">espinaca fresca</span> + tomate</div></div>
+      </div></div>
+      <div class="bc-day"><div class="bc-dh"><div class="bc-dn">M</div><div><div class="bc-dname">Martes</div></div><span class="bc-db n">Cocinar fideos hoy</span></div><div class="bc-meals">
+        <div class="bc-m"><div class="bc-ml">Desayuno</div><div class="bc-mt">Pancakes avena + 2 huevos + platano + mani <span class="fr">(cocinar)</span></div></div>
+        <div class="bc-m"><div class="bc-ml">Almuerzo</div><div class="bc-mt"><span class="bt">Porotos negros (tapper)</span> + <span class="bt">Tofu 150g (crudo)</span> saltear + zanahoria + <span class="fr">fideos 80g (cocinar hoy)</span>. Con limon.</div></div>
+        <div class="bc-m"><div class="bc-ml">Colacion</div><div class="bc-mt">Yogur griego + mani + platano</div></div>
+        <div class="bc-m"><div class="bc-ml">Cena</div><div class="bc-mt">2 huevos revueltos + <span class="fr">espinaca fresca</span> + tomate <span class="fr">(saltear 5 min)</span></div></div>
+      </div></div>
+      <div class="bc-day"><div class="bc-dh"><div class="bc-dn">X</div><div><div class="bc-dname">Miercoles</div></div><span class="bc-db n">Cocinar arroz hoy</span></div><div class="bc-meals">
+        <div class="bc-m"><div class="bc-ml">Desayuno</div><div class="bc-mt">Gachas avena + leche + 2 huevos + manzana + chia <span class="fr">(cocinar)</span></div></div>
+        <div class="bc-m"><div class="bc-ml">Almuerzo</div><div class="bc-mt"><span class="bt">Garbanzos (tapper)</span> + <span class="fr">Soya (hidratar manana)</span> + <span class="bt">Zapallo asado (tapper)</span> + <span class="fr">arroz 70g (cocinar hoy)</span>. Con limon.</div></div>
+        <div class="bc-m"><div class="bc-ml">Colacion</div><div class="bc-mt">Tostadas pan integral + quesillo + tomate + yogur</div></div>
+        <div class="bc-m"><div class="bc-ml">Cena</div><div class="bc-mt">Omelette 2 huevos + queso + <span class="fr">espinaca + tomate (saltear 5 min)</span></div></div>
+      </div></div>
+      <div class="bc-day"><div class="bc-dh"><div class="bc-dn">J</div><div><div class="bc-dname">Jueves</div></div><span class="bc-db n">Todo del batch</span></div><div class="bc-meals">
+        <div class="bc-m"><div class="bc-ml">Desayuno</div><div class="bc-mt">Pancakes avena + 2 huevos + manzana + mani <span class="fr">(cocinar)</span></div></div>
+        <div class="bc-m"><div class="bc-ml">Almuerzo</div><div class="bc-mt"><span class="bt">Lentejas (tapper)</span> + <span class="bt">Porotos verdes (tapper)</span> + <span class="bt">Camote asado (tapper)</span>. Con limon.</div></div>
+        <div class="bc-m"><div class="bc-ml">Colacion</div><div class="bc-mt">Yogur griego + mani + platano</div></div>
+        <div class="bc-m"><div class="bc-ml">Cena</div><div class="bc-mt"><span class="fr">Soya (hidratar esta tarde)</span> salteada + <span class="fr">espinaca fresca</span> + 1 huevo al final</div></div>
+      </div></div>
+      <div class="bc-day"><div class="bc-dh"><div class="bc-dn urg">V</div><div><div class="bc-dname">Viernes</div></div><span class="bc-db u">&#9888; Ultimas papas</span></div><div class="bc-meals">
+        <div class="bc-m"><div class="bc-ml">Desayuno</div><div class="bc-mt">Gachas avena + leche + 2 huevos pochados + palta <span class="fr">(cocinar)</span></div></div>
+        <div class="bc-m"><div class="bc-ml">Almuerzo</div><div class="bc-mt"><span class="bt">Porotos negros (tapper)</span> + <span class="bt">Tofu 150g (crudo)</span> saltear + <span class="bt">Brocoli (tapper)</span> + <span class="bt">Papa (ultimas del batch)</span>. Con limon.</div></div>
+        <div class="bc-m"><div class="bc-ml">Colacion</div><div class="bc-mt">Yogur griego + mani + platano</div></div>
+        <div class="bc-m"><div class="bc-ml">Cena</div><div class="bc-mt">2 huevos a la plancha + <span class="fr">acelga fresca</span> salteada + tomate</div></div>
+      </div></div>
+      <div class="bc-day"><div class="bc-dh"><div class="bc-dn">S</div><div><div class="bc-dname">Sabado</div></div><span class="bc-db l">Solo duraderos</span></div><div class="bc-meals">
+        <div class="bc-m"><div class="bc-ml">Desayuno</div><div class="bc-mt">Gachas avena + leche + 2 huevos + naranja <span class="fr">(cocinar)</span></div></div>
+        <div class="bc-m"><div class="bc-ml">Almuerzo</div><div class="bc-mt"><span class="bt">Garbanzos (tapper)</span> + <span class="fr">Soya (hidratar manana)</span> + zanahoria + <span class="bt">Brocoli (tapper)</span>. Con limon.</div></div>
+        <div class="bc-m"><div class="bc-ml">Colacion</div><div class="bc-mt">Yogur griego + nueces/mani + fruta</div></div>
+        <div class="bc-m"><div class="bc-ml">Cena</div><div class="bc-mt"><span class="bt">Tofu 100g (ultimo tapper)</span> saltear + <span class="fr">espinaca fresca</span> + tomate + 1 huevo</div></div>
+      </div></div>
+    </div>
+    <div class="bc-sh"><div class="bc-sh-ic" style="background:rgba(200,168,80,.15)">&#128161;</div><div><h2>Tips de conservacion</h2><p>Para que todo dure y sepa bien</p></div></div>
+    <div class="bc-tips">
+      <div class="bc-tip"><div class="bc-tip-ic">&#127777;</div><div class="bc-tip-t">Enfriar antes de tapar</div><div class="bc-tip-txt">Nunca metas comida caliente al refrigerador. El vapor condensa y arruina la textura. Espera 20-30 min.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#127991;</div><div class="bc-tip-t">Etiqueta todo</div><div class="bc-tip-txt">Cinta adhesiva + marcador. Escribe: "Lun alm · Porotos · 175g". Ahorra tiempo y evita confusiones.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#128167;</div><div class="bc-tip-t">Legumbres con caldo</div><div class="bc-tip-txt">Guardar con un poco del caldo de coccion. Se mantienen humedas y saben mejor al recalentar.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#129382;</div><div class="bc-tip-t">Brocoli al dente</div><div class="bc-tip-txt">NO sobre-cocinar. Pasar por agua fria apenas sale del vapor. Si queda muy cocido, se deshace al recalentar.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#129398;</div><div class="bc-tip-t">Tofu crudo dura 5 dias</div><div class="bc-tip-txt">Guardar sumergido en agua en tapper cerrado. Cambiar el agua cada 2 dias.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#129388;</div><div class="bc-tip-t">Espinaca con papel</div><div class="bc-tip-txt">Poner papel absorbente dentro del tapper con la espinaca lavada. Absorbe humedad y dura el doble.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#9889;</div><div class="bc-tip-t">Recalentar con agua</div><div class="bc-tip-txt">Al recalentar legumbres, agregar 2-3 cucharadas de agua. Quedan cremosas y no se secan.</div></div>
+      <div class="bc-tip"><div class="bc-tip-ic">&#127819;</div><div class="bc-tip-t">Limon siempre al servir</div><div class="bc-tip-txt">No cocines el limon — agregalo al plato ya servido. Preserva la vitamina C que triplica la absorcion de hierro.</div></div>
+    </div>
+  </div>
+</div>
 <div id="s-recetas" class="scr">
   <div class="ph"><h1>Mis <em>Recetas</em></h1><p>17 preparaciones del plan &mdash; toca para ver los pasos</p></div>
   <div class="fr" id="rec-tabs">
@@ -447,6 +689,7 @@ body.dark #settings-btn{background:rgba(34,42,36,.95);}
 <nav class="bnav">
   <button class="nb active" onclick="go('hoy',this)"><span class="ni">&#127807;</span><span class="nl">Hoy</span></button>
   <button class="nb" onclick="go('semana',this)"><span class="ni">&#127869;</span><span class="nl">Semana</span></button>
+  <button class="nb" onclick="go('batch',this)"><span class="ni">&#128230;</span><span class="nl">Batch</span></button>
   <button class="nb" onclick="go('recetas',this)"><span class="ni">&#128218;</span><span class="nl">Recetas</span></button>
   <button class="nb" onclick="go('macros',this)"><span class="ni">&#128202;</span><span class="nl">Macros</span></button>
   <button class="nb" onclick="go('tips',this)"><span class="ni">&#128161;</span><span class="nl">Clinico</span></button>
