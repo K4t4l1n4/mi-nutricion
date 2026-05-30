@@ -184,6 +184,46 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .racha-info{flex:1;}
 .racha-n{font-size:.82rem;font-weight:700;color:var(--ink);}
 .racha-s{font-size:.68rem;color:var(--muted);}
+/* DARK MODE */
+body.dark{--cream:#181e1a;--card:#222a24;--ink:#ddeedd;--muted:#7a9a7e;--border:rgba(122,158,126,0.2);}
+body.dark .bnav{background:rgba(28,36,30,.97);}
+body.dark .ph{background:linear-gradient(to bottom,#181e1a 82%,transparent);}
+body.dark .mstrip{background:#222a24;}
+body.dark .nota-ta{background:#1e261f;color:#ddeedd;border-color:rgba(122,158,126,.25);}
+body.dark .comida-chk{background:#1e261f;}
+body.dark .io-btn{color:#2d5a32;}
+/* SETTINGS BUTTON */
+#settings-btn{position:fixed;top:14px;right:16px;z-index:200;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.13);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.05rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+body.dark #settings-btn{background:rgba(34,42,36,.95);}
+/* SETTINGS PANEL */
+#settings-panel{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;}
+#settings-panel.hidden{display:none;}
+#settings-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);}
+#settings-box{position:relative;background:var(--card);border-radius:24px 24px 0 0;padding:22px 20px 36px;width:100%;z-index:1;}
+.sett-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 18px;}
+.sett-title{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:var(--sage-dark);margin-bottom:12px;}
+.sett-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.sett-label{font-size:.87rem;font-weight:600;color:var(--ink);}
+.toggle-wrap{width:48px;height:27px;border-radius:14px;background:rgba(122,158,126,.25);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.toggle-wrap.on{background:var(--sage-dark);}
+.toggle-dot{position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:transform .22s;}
+.toggle-wrap.on .toggle-dot{transform:translateX(21px);}
+.color-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;margin-bottom:4px;}
+.color-dot{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s,border-color .15s;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+.color-dot.active{border-color:var(--ink);transform:scale(1.2);}
+/* COMIDAS CHECK */
+.mr2.comida-done{opacity:.5;}
+.mr2.comida-done .md2{text-decoration:line-through;}
+.comida-chk{width:26px;height:26px;border-radius:8px;border:2px solid rgba(122,158,126,.35);background:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.78rem;color:transparent;transition:all .15s;margin-top:2px;}
+.mr2.comida-done .comida-chk{background:var(--sage-dark);border-color:var(--sage-dark);color:white;}
+/* NOTA DEL DIA */
+.nota-wrap{margin:0 16px 12px;}
+.nota-ta{width:100%;border:1.5px solid var(--border);border-radius:14px;padding:11px 14px;font-size:.8rem;font-family:inherit;color:var(--ink);background:var(--card);resize:none;outline:none;line-height:1.55;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:border-color .2s;}
+.nota-ta:focus{border-color:var(--sage);}
+.nota-saved{font-size:.63rem;color:var(--sage-dark);text-align:right;margin-top:3px;min-height:14px;font-weight:600;}
+/* COMPARTIR */
+.share-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 16px 12px;background:var(--sage-dark);color:white;border:none;border-radius:14px;padding:13px;font-size:.82rem;font-weight:700;font-family:inherit;cursor:pointer;width:calc(100% - 32px);transition:opacity .15s;}
+.share-btn:active{opacity:.82;}
 </style>
 </head>
 <body>
@@ -202,6 +242,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <div class="io-step"><div class="io-num">3</div><span>Toca <strong>"Agregar"</strong> y aparece el icono en tu inicio</span></div>
     </div>
     <button class="io-skip" onclick="document.getElementById('install-overlay').classList.add('hidden')">Saltar por ahora</button>
+  </div>
+</div>
+<button id="settings-btn" onclick="toggleSettings()">&#9881;&#65039;</button>
+<div id="settings-panel" class="hidden">
+  <div id="settings-bg" onclick="toggleSettings()"></div>
+  <div id="settings-box">
+    <div class="sett-handle"></div>
+    <div class="sett-title">Apariencia</div>
+    <div class="sett-row">
+      <span class="sett-label">&#127769; Modo oscuro</span>
+      <div class="toggle-wrap" id="dm-toggle" onclick="toggleDark()"><div class="toggle-dot"></div></div>
+    </div>
+    <div class="sett-title">Color de la app</div>
+    <div class="color-row" id="color-row"></div>
   </div>
 </div>
 <div id="app">
@@ -235,6 +289,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="wot"><h3 id="wt">Fuerza</h3><p id="wd">Sentadillas - Planchas - Lunges - 30 min</p></div>
     <div class="wok" id="wok" onclick="toggleWo()">&#9675;</div>
   </div></div>
+  <div class="st">&#128221; Nota del dia</div>
+  <div class="nota-wrap">
+    <textarea class="nota-ta" id="nota-ta" rows="3" placeholder="Como te sentiste hoy? Algo que quieras recordar..."></textarea>
+    <div class="nota-saved" id="nota-saved"></div>
+  </div>
 </div>
 <div id="s-semana" class="scr">
   <div class="ph"><h1>Menu de la <em>Semana</em></h1><p>Toca un dia para ver sus comidas</p></div>
@@ -334,6 +393,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <button class="fb rst" onclick="rc2()">&#8634; Reiniciar</button>
   </div>
   <div id="gl"></div>
+  <button class="share-btn" onclick="compartirLista()">&#128228; Compartir lista de compras</button>
   <div class="sbox">
     <div class="st2">&#127978; Estrategia de compra</div>
     <div class="sb"><b>&#128197; 1x al mes -- Estacion Natural:</b> Box This Is Vegan (Tofu + 3 cortes de Seitan).<br><b>&#128197; 1x al mes -- Mayorista 10:</b> cereales, legumbres, chia, mani, aceite, salsa. Los items de 2 meses (garbanzos, chia, aceite) se compran cada 2 meses.<br><b>&#128652; 1x a la semana -- Feria libre:</b> papa, zanahoria, cebolla, tomate, zapallo, platano, manzana -- hasta 50% mas barato que supermercado.</div>
@@ -533,6 +593,8 @@ var woDone=false;
 try{woDone=localStorage.getItem("wo_"+todayKey)==="1";}catch(e){woDone=false;}
 var chk={};
 try{chk=JSON.parse(localStorage.getItem("chk2")||"{}");}catch(e){chk={};}
+var mealsDone={};
+try{mealsDone=JSON.parse(localStorage.getItem("meals_"+todayKey)||"{}");}catch(e){}
 if(localStorage.getItem("visited")){document.getElementById("install-overlay").classList.add("hidden");}
 localStorage.setItem("visited","1");
 
@@ -558,11 +620,7 @@ function initHoy(){
   document.getElementById("hdia").textContent=dias[ti];
   document.getElementById("hnum").textContent=today.getDate();
   document.getElementById("hmes").textContent=meses[today.getMonth()];
-  var html="";
-  menu[ti].c.forEach(function(c){
-    html+='<div class="mr2"><div class="mi">'+c.i+'</div><div class="mb2"><div class="mt2">'+c.t+'</div><div class="md2">'+c.d+'</div></div><div class="mk">'+c.k+'</div></div>';
-  });
-  document.getElementById("hcomidas").innerHTML=html;
+  renderComidas();
   var w=wo[ti];
   document.getElementById("we").innerHTML=w.e;
   document.getElementById("wt").textContent=w.t;
@@ -576,6 +634,7 @@ function initHoy(){
   }
   if(waterCount>0){setWater(waterCount);}
   if(woDone){var wb=document.getElementById("wok");if(wb){wb.innerHTML="&#10003;";wb.classList.add("done");}}
+  initNota();
 }
 function setWater(n){
   waterCount=n;
@@ -663,26 +722,21 @@ function rg(){
   con.innerHTML=html;
   con.onclick=function(e){var el=e.target.closest("[data-id]");if(!el)return;var id=el.getAttribute("data-id");if(!id)return;chk[id]=!chk[id];sc2();rg();};
 }
-function ajustarAgua(delta){
-  var n=Math.max(0,Math.min(8,waterCount+delta));
-  setWater(n);
-}
+function ajustarAgua(delta){setWater(Math.max(0,Math.min(8,waterCount+delta)));}
 function calcRacha(){
-  var racha=0;
-  var d=new Date(today);
-  for(var i=0;i<30;i++){
-    d.setDate(today.getDate()-i);
-    var k=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-    if(localStorage.getItem("wo_"+k)==="1"){racha++;}else{break;}
+  var r=0,d=new Date(today);
+  for(var i=0;i<60;i++){
+    var dd=new Date(today);dd.setDate(today.getDate()-i);
+    var k=dd.getFullYear()+"-"+(dd.getMonth()+1)+"-"+dd.getDate();
+    if(localStorage.getItem("wo_"+k)==="1"){r++;}else{break;}
   }
-  return racha;
+  return r;
 }
 function renderRacha(){
-  var bar=document.getElementById("racha-bar");
-  if(!bar)return;
+  var bar=document.getElementById("racha-bar");if(!bar)return;
   var r=calcRacha();
-  var txt=r===0?"Empieza hoy tu primera racha":r===1?"1 dia consecutivo — &#128293; primer paso!":r+" dias consecutivos — &#129351; racha activa!";
   var ic=r===0?"&#128168;":r<3?"&#129395;":"&#128293;";
+  var txt=r===0?"Empieza hoy tu primera racha &#128170;":r===1?"1 dia consecutivo &mdash; &#128293; primer paso!":r+" dias consecutivos &mdash; &#129351; racha activa!";
   bar.innerHTML='<div class="racha-ic">'+ic+'</div><div class="racha-info"><div class="racha-n">Racha de ejercicio</div><div class="racha-s">'+txt+'</div></div>';
 }
 function renderRecetas(cat,btn){
@@ -695,8 +749,7 @@ function renderRecetas(cat,btn){
     html+='<div class="rec-emoji">'+r.e+'</div>';
     html+='<div class="rec-info"><div class="rec-name">'+r.n+'</div><div class="rec-meta">&#9201; '+r.t+' &middot; '+r.k+'</div></div>';
     html+='<div class="rec-arrow">&#8250;</div></div>';
-    html+='<div class="rec-body">';
-    html+='<div class="rec-stit">Ingredientes (1 porcion)</div><ul class="rec-ing">';
+    html+='<div class="rec-body"><div class="rec-stit">Ingredientes (1 porcion)</div><ul class="rec-ing">';
     r.ing.forEach(function(i){html+='<li>'+i+'</li>';});
     html+='</ul><div class="rec-stit">Preparacion paso a paso</div><ol class="rec-steps">';
     r.pasos.forEach(function(p){html+='<li>'+p+'</li>';});
@@ -708,7 +761,103 @@ function renderRecetas(cat,btn){
   document.getElementById("rec-list").innerHTML=html;
 }
 function toggleRec(card){card.classList.toggle("open");}
-initHoy();initSemana();renderRecetas("todas",null);renderRacha();rg();
+function renderComidas(){
+  var html="";
+  menu[ti].c.forEach(function(c,idx){
+    var done=!!mealsDone[idx];
+    html+='<div class="mr2'+(done?" comida-done":"")+'" onclick="toggleMeal('+idx+')" style="cursor:pointer;">';
+    html+='<div class="mi">'+c.i+'</div>';
+    html+='<div class="mb2"><div class="mt2">'+c.t+'</div><div class="md2">'+c.d+'</div></div>';
+    html+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">';
+    html+='<div class="mk">'+c.k+'</div>';
+    html+='<div class="comida-chk">'+(done?"&#10003;":"")+'</div>';
+    html+='</div></div>';
+  });
+  document.getElementById("hcomidas").innerHTML=html;
+}
+function toggleMeal(idx){
+  mealsDone[idx]=!mealsDone[idx];
+  try{localStorage.setItem("meals_"+todayKey,JSON.stringify(mealsDone));}catch(e){}
+  renderComidas();
+}
+function initNota(){
+  var ta=document.getElementById("nota-ta");if(!ta)return;
+  ta.value=localStorage.getItem("nota_"+todayKey)||"";
+  var timer=null;
+  ta.addEventListener("input",function(){
+    clearTimeout(timer);
+    var saved=document.getElementById("nota-saved");if(saved)saved.textContent="";
+    timer=setTimeout(function(){
+      try{localStorage.setItem("nota_"+todayKey,ta.value);}catch(e){}
+      var saved=document.getElementById("nota-saved");
+      if(saved){saved.textContent="Guardado &#10003;";setTimeout(function(){if(saved)saved.textContent="";},2000);}
+    },700);
+  });
+}
+function compartirLista(){
+  function strip(s){var d=document.createElement("div");d.innerHTML=s;return(d.textContent||d.innerText||"").trim();}
+  var lines=["Mi lista de compras — Mi Plan Nutricional\n"];
+  gdata.forEach(function(sec){
+    var toBuy=sec.items.filter(function(i){return !chk[i.id];});
+    if(!toBuy.length)return;
+    lines.push(strip(sec.cat)+":");
+    toBuy.forEach(function(i){lines.push("  • "+i.n+" — "+i.q);});
+    lines.push("");
+  });
+  var txt=lines.join("\n");
+  if(navigator.share){
+    navigator.share({title:"Lista de Compras",text:txt}).catch(function(){});
+  }else{
+    try{
+      navigator.clipboard.writeText(txt).then(function(){alert("Lista copiada al portapapeles &#10003;");});
+    }catch(e){
+      var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("Lista copiada!");
+    }
+  }
+}
+var temas=[
+  {id:"verde",   label:"Verde",   sage:"#7a9e7e",dark:"#4a6e4e",light:"#a8c5a0",terra:"#c4835a"},
+  {id:"azul",    label:"Azul",    sage:"#6090c0",dark:"#2d6a9f",light:"#90b8d8",terra:"#d07840"},
+  {id:"morado",  label:"Morado",  sage:"#9878c0",dark:"#6d4fa0",light:"#c0a0d8",terra:"#c06860"},
+  {id:"rosa",    label:"Rosa",    sage:"#c07898",dark:"#9a4868",light:"#e0a8b8",terra:"#c08840"},
+  {id:"naranja", label:"Naranja", sage:"#c09050",dark:"#9a6020",light:"#e0b880",terra:"#5080a8"},
+  {id:"pizarra", label:"Pizarra", sage:"#708090",dark:"#485868",light:"#98a8b8",terra:"#b07850"}
+];
+var temaActual=localStorage.getItem("tema")||"verde";
+function applyTema(id){
+  temaActual=id;
+  var t=temas.find(function(t){return t.id===id;});if(!t)return;
+  var r=document.documentElement.style;
+  r.setProperty("--sage",t.sage);r.setProperty("--sage-dark",t.dark);
+  r.setProperty("--sage-light",t.light);r.setProperty("--terra",t.terra);
+  var meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute("content",t.dark);
+  try{localStorage.setItem("tema",id);}catch(e){}
+  document.querySelectorAll(".color-dot").forEach(function(d){d.classList.toggle("active",d.dataset.id===id);});
+}
+function initTemas(){
+  var row=document.getElementById("color-row");if(!row)return;
+  temas.forEach(function(t){
+    var d=document.createElement("div");
+    d.className="color-dot"+(t.id===temaActual?" active":"");
+    d.dataset.id=t.id;
+    d.style.background=t.dark;
+    d.title=t.label;
+    d.onclick=function(){applyTema(t.id);};
+    row.appendChild(d);
+  });
+  if(temaActual!=="verde")applyTema(temaActual);
+}
+var darkMode=localStorage.getItem("darkMode")==="1";
+function toggleDark(){
+  darkMode=!darkMode;
+  document.body.classList.toggle("dark",darkMode);
+  document.getElementById("dm-toggle").classList.toggle("on",darkMode);
+  try{localStorage.setItem("darkMode",darkMode?"1":"0");}catch(e){}
+}
+function toggleSettings(){document.getElementById("settings-panel").classList.toggle("hidden");}
+initHoy();initSemana();renderRecetas("todas",null);renderRacha();rg();initTemas();
+if(darkMode){document.body.classList.add("dark");document.getElementById("dm-toggle").classList.add("on");}
 </script>
 </body>
 </html>
