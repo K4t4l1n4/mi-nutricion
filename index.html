@@ -154,6 +154,36 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .sbox .sb{font-size:.74rem;color:#3a4a3e;line-height:1.55;}
 @keyframes fu{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
 .fi{animation:fu .28s ease both;}
+/* RECETAS */
+.rec-card{background:var(--card);border-radius:16px;margin:0 16px 10px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow:hidden;}
+.rec-head{display:flex;align-items:center;gap:12px;padding:14px 15px;cursor:pointer;user-select:none;}
+.rec-emoji{font-size:1.9rem;line-height:1;flex-shrink:0;}
+.rec-info{flex:1;min-width:0;}
+.rec-name{font-size:.86rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.rec-meta{font-size:.68rem;color:var(--muted);}
+.rec-arrow{font-size:1.5rem;color:var(--muted);transition:transform .25s;flex-shrink:0;line-height:1;font-weight:300;}
+.rec-card.open .rec-arrow{transform:rotate(90deg);}
+.rec-body{display:none;padding:4px 15px 15px;border-top:1px solid var(--border);}
+.rec-card.open .rec-body{display:block;}
+.rec-stit{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:var(--sage-dark);margin:13px 0 7px;}
+.rec-ing{list-style:none;padding:0;margin:0;}
+.rec-ing li{font-size:.79rem;color:#3a4a3e;padding:5px 0;border-bottom:1px solid rgba(122,158,126,.07);display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
+.rec-ing li:last-child{border-bottom:none;}
+.rec-ing li::before{content:'·';color:var(--sage);font-weight:900;font-size:1.1rem;line-height:1.2;flex-shrink:0;}
+.rec-steps{padding:0;margin:0;list-style:none;counter-reset:step;}
+.rec-steps li{counter-increment:step;font-size:.79rem;color:#3a4a3e;line-height:1.5;padding:6px 0 6px 30px;position:relative;border-bottom:1px solid rgba(122,158,126,.07);}
+.rec-steps li:last-child{border-bottom:none;}
+.rec-steps li::before{content:counter(step);position:absolute;left:0;top:6px;width:21px;height:21px;background:var(--sage-dark);color:white;border-radius:50%;font-size:.6rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;}
+.rec-tip{background:rgba(196,131,90,.07);border:1.5px solid rgba(196,131,90,.22);border-radius:11px;padding:10px 12px;margin-top:12px;font-size:.75rem;color:#7a4a2a;line-height:1.5;}
+/* MEJORAS AUDIT */
+.agua-ctrl{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.agua-btn{width:34px;height:34px;border-radius:50%;border:2px solid rgba(74,110,78,.35);background:white;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sage-dark);flex-shrink:0;transition:all .15s;}
+.agua-btn:active{transform:scale(.9);}
+.racha-bar{margin:0 16px 12px;background:var(--card);border-radius:14px;padding:12px 15px;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;align-items:center;gap:12px;}
+.racha-ic{font-size:1.6rem;line-height:1;}
+.racha-info{flex:1;}
+.racha-n{font-size:.82rem;font-weight:700;color:var(--ink);}
+.racha-s{font-size:.68rem;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -190,10 +220,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   <div class="card"><div id="hcomidas"></div></div>
   <div class="st">&#128167; Agua del dia</div>
   <div class="wc">
-    <div class="wt">Meta: 8 vasos -- 2,5 L dias de ejercicio / 2 L descanso</div>
+    <div class="wt">Meta: 8 vasos &mdash; 2,5 L ejercicio / 2 L descanso</div>
     <div class="wg" id="wg"></div>
-    <div class="wl" id="wl">0 / 8 vasos</div>
+    <div class="agua-ctrl">
+      <button class="agua-btn" onclick="ajustarAgua(-1)">&#8722;</button>
+      <div class="wl" id="wl" style="flex:1">0 / 8 vasos</div>
+      <button class="agua-btn" onclick="ajustarAgua(1)">&#43;</button>
+    </div>
   </div>
+  <div class="racha-bar" id="racha-bar"></div>
   <div class="st">&#127939; Ejercicio de hoy</div>
   <div class="woc"><div class="woi">
     <div class="woe" id="we">&#127947;</div>
@@ -311,9 +346,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   </div>
   <div style="height:8px"></div>
 </div>
+<div id="s-recetas" class="scr">
+  <div class="ph"><h1>Mis <em>Recetas</em></h1><p>17 preparaciones del plan &mdash; toca para ver los pasos</p></div>
+  <div class="fr" id="rec-tabs">
+    <button class="fb active" onclick="renderRecetas('todas',this)">Todas</button>
+    <button class="fb" onclick="renderRecetas('desayuno',this)">&#127749; Desayuno</button>
+    <button class="fb" onclick="renderRecetas('almuerzo',this)">&#9728; Almuerzo</button>
+    <button class="fb" onclick="renderRecetas('colacion',this)">&#127822; Colacion</button>
+    <button class="fb" onclick="renderRecetas('cena',this)">&#127769; Cena</button>
+  </div>
+  <div id="rec-list"></div>
+  <div style="height:8px"></div>
+</div>
 <nav class="bnav">
   <button class="nb active" onclick="go('hoy',this)"><span class="ni">&#127807;</span><span class="nl">Hoy</span></button>
   <button class="nb" onclick="go('semana',this)"><span class="ni">&#127869;</span><span class="nl">Semana</span></button>
+  <button class="nb" onclick="go('recetas',this)"><span class="ni">&#128218;</span><span class="nl">Recetas</span></button>
   <button class="nb" onclick="go('macros',this)"><span class="ni">&#128202;</span><span class="nl">Macros</span></button>
   <button class="nb" onclick="go('tips',this)"><span class="ni">&#128161;</span><span class="nl">Clinico</span></button>
   <button class="nb" onclick="go('compras',this)"><span class="ni">&#128722;</span><span class="nl">Compras</span></button>
@@ -404,6 +452,77 @@ var gdata=[
     {id:"manzana",n:"Manzanas Rojas",q:"~1,1 kg / semana (~4,4 kg/mes)",d:"Colaciones y overnight oats - fibra soluble y saciedad",p:"~$1.980/sem",cost:1980,wcost:1980,freq:"semanal"}
   ]}
 ];
+var recetas=[
+{cat:"desayuno",e:"&#129379;",n:"Gachas de Avena con Platano y Chia",t:"8 min",k:"~420 kcal",
+ing:["60g avena instantanea","300ml agua","1 platano maduro (100g)","20g chia (previamente hidratada)","Canela al gusto"],
+pasos:["Hidrata la chia en 60ml de agua al menos 15 min antes (o la noche anterior).","Hierve el agua en una olla pequeña.","Agrega la avena, baja el fuego y revuelve constantemente 3-4 min hasta que espese.","Sirve en un bol y añade el platano en rodajas.","Corona con la chia hidratada y espolvorea canela."],
+tip:"La chia debe estar siempre hidratada: seca, su cascara de silice bloquea la absorcion de omega-3."},
+{cat:"desayuno",e:"&#129374;",n:"Pancakes de Avena con Platano",t:"15 min",k:"~410 kcal",
+ing:["60g avena instantanea","1 platano maduro (100g)","3ml aceite de maravilla","Agua c/n para textura"],
+pasos:["Muele la avena en licuadora hasta obtener harina gruesa.","Aplasta el platano con tenedor hasta hacer pure.","Mezcla la harina con el pure de platano, agrega agua de a poco hasta textura espesa pero vertible.","Calienta una sarten a fuego medio con el aceite.","Vierte pequeñas porciones y cocina 2-3 min por lado hasta dorar."],
+tip:"El platano maduro actua de endulzante natural sin azucar. Cuanto mas maduro, mas dulces quedan los pancakes."},
+{cat:"desayuno",e:"&#127769;",n:"Overnight Oats con Chia y Manzana",t:"5 min + noche",k:"~410 kcal",
+ing:["60g avena instantanea","20g chia","150ml agua","1 manzana rallada con piel (100g)"],
+pasos:["En un frasco o tupper, mezcla la avena con la chia y el agua.","Ralla la manzana con piel y agregala a la mezcla.","Revuelve bien, tapa y refrigera toda la noche.","A la mañana siguiente consume directo o en un bol."],
+tip:"La avena remojada libera mas almidon resistente, mejor para la microbiota intestinal. Prepara el domingo para el lunes."},
+{cat:"colacion",e:"&#127807;",n:"Chia Pudding con Manzana",t:"5 min + 20 min reposo",k:"~210 kcal",
+ing:["20g chia","150ml agua","1 manzana picada (150g)"],
+pasos:["Mezcla la chia con el agua en un vaso o bol.","Revuelve bien y deja reposar 20 min — o toda la noche en la heladera.","Revuelve nuevamente a los 10 min para evitar grumos.","Sirve con la manzana picada encima."],
+tip:"La chia forma un gel al hidratarse que frena la absorcion de glucosa — excelente colacion pre o post entrenamiento."},
+{cat:"colacion",e:"&#10024;",n:"Tofu Dorado Crocante",t:"12 min",k:"~140 kcal por 200g",
+ing:["100-200g tofu artesanal","Aceite c/n para cubrir la sarten","Sal y ajo en polvo opcional"],
+pasos:["Saca el tofu del envase y secalo muy bien con papel absorbente — este paso es clave.","Cortalo en cubos o laminas de 1 a 1,5 cm.","Calienta la sarten a fuego medio-alto hasta que este bien caliente.","Coloca el tofu sin moverlo por 3-4 min hasta que se forme costra dorada.","Da vuelta y repite por el otro lado. Sazona con sal al servir."],
+tip:"Nunca muevas el tofu mientras se dora. La paciencia crea la costra crocante. El sellado a fuego alto mejora la digestibilidad."},
+{cat:"almuerzo",e:"&#129368;",n:"Salteado de Seitan Trocitos con Arroz",t:"25 min",k:"~680 kcal",
+ing:["120g seitan trocitos","70g arroz blanco crudo","100g zanahoria en juliana","50g cebolla en pluma","10ml aceite de maravilla","Salsa de soja a gusto (opcional)"],
+pasos:["Cocina el arroz con doble de agua, tapa y fuego bajo 15 min. Reserva.","Calienta el aceite en sarten a fuego alto.","Saltea la cebolla 2 min, agrega zanahoria y cocina 3-4 min mas.","Agrega el seitan trocitos y dora 3-4 min sin mover mucho para que se selle.","Incorpora el arroz cocido, mezcla y añade salsa de soja si deseas."],
+tip:"Seitan requiere sellado a fuego alto: la reaccion de Maillard mejora el sabor y facilita la digestibilidad."},
+{cat:"almuerzo",e:"&#128993;",n:"Croquetas de Garbanzo",t:"30 min + remojo previo",k:"~300 kcal por porcion",
+ing:["120g garbanzos cocidos (remojo previo 12-18h)","Comino, ajo en polvo, sal","Aceite c/n para cocinar"],
+pasos:["Remojar garbanzos 12-18h en agua fria. Enjuaga y cocina en agua nueva 45-60 min hasta tiernos.","Escurre bien y aplasta con tenedor dejando algo de textura irregular.","Sazona con comino, ajo en polvo y sal. Mezcla.","Forma pequeñas croquetas con las manos.","Cocina en sarten con poco aceite a fuego medio, 3-4 min por lado hasta dorar."],
+tip:"Desecha siempre el agua de remojo y cocina con agua fresca: elimina los antinutrientes que bloquean la absorcion de hierro y zinc."},
+{cat:"almuerzo",e:"&#127858;",n:"Guiso de Lentejas con Tofu",t:"35 min + remojo",k:"~660 kcal",
+ing:["100g lentejas secas (remojo previo 12h)","150g tofu artesanal en cubos","50g zanahoria en cubos","50g cebolla picada","10ml aceite","Tomate fresco — clave para absorcion del hierro"],
+pasos:["Remojar lentejas 12h. Enjuaga y cocina en agua nueva 25-30 min hasta tiernas.","Dora la cebolla en aceite, agrega zanahoria y cocina 5 min.","Añade el tofu en cubos y dora 3 min.","Incorpora las lentejas cocidas y tomate fresco picado. Cocina 5 min mas.","Ajusta sazon y sirve."],
+tip:"El tomate aporta vitamina C que multiplica hasta 3x la absorcion del hierro no-hemo de las lentejas. Nunca omitas esta combinacion."},
+{cat:"almuerzo",e:"&#127835;",n:"Arroz Chaufa Vegano",t:"25 min",k:"~680 kcal",
+ing:["70g arroz blanco crudo (idealmente del dia anterior)","100g seitan trocitos","120g tofu artesanal desmenuzado","50g cebolla en pluma","10ml aceite","Salsa de soja a gusto"],
+pasos:["Cocina el arroz y deja enfriar — el del dia anterior es ideal.","Desmenuza el tofu con las manos en trozos irregulares.","Calienta el aceite a fuego muy alto en wok o sarten grande.","Saltea el seitan hasta dorar, agrega el tofu desmenuzado y la cebolla.","Añade el arroz frio, mezcla a fuego alto. Sazona con salsa de soja."],
+tip:"El arroz del dia anterior tiene mas almidon resistente (mejor para la microbiota) y no se apelmaza en el salteado."},
+{cat:"almuerzo",e:"&#127842;",n:"Brochetas de Seitan Parrillero",t:"20 min",k:"~670 kcal",
+ing:["150g seitan parrillero en trozos","180g papas cocidas con piel","50g zanahoria en cubos","10ml aceite","Limon y oregano para marinar (opcional)"],
+pasos:["Corta el seitan en trozos de 3-4 cm. Marina 10 min en jugo de limon y oregano si tienes tiempo.","Intercala seitan con trozos de zanahoria en palillos de brocheta.","Calienta sarten con aceite a fuego alto.","Cocina las brochetas 3-4 min por lado hasta que el seitan este dorado.","Sirve con papas cocidas con piel en ensalada o pure rustico."],
+tip:"El marinado rapido en limon ablanda la fibra del seitan y mejora el sabor. Con solo 10 minutos es suficiente."},
+{cat:"almuerzo",e:"&#129373;",n:"Estofado de Seitan con Papas",t:"35 min",k:"~700 kcal",
+ing:["150g seitan trocitos","250g papas en cubos con piel","50g cebolla picada","50g zanahoria en cubos","10ml aceite","Agua c/n, sal, oregano, ajo"],
+pasos:["Calienta el aceite y dora el seitan trocitos a fuego alto 3-4 min.","Agrega cebolla y zanahoria, cocina 3 min mas.","Añade las papas en cubos, sazona con sal, ajo y oregano.","Cubre con agua, tapa y cocina a fuego medio 20-25 min hasta que las papas esten tiernas.","Ajusta sazon. El caldo se espesa naturalmente con el almidon de la papa."],
+tip:"Si sobra liquido al final, sube el fuego sin tapa 5 min para reducir. El caldo absorbe el sabor del seitan."},
+{cat:"cena",e:"&#127837;",n:"Bolonesa de Seitan Churrasco",t:"25 min",k:"~560 kcal",
+ing:["100g seitan churrasco","80g fideos","80g salsa de tomate","50g cebolla en brunoise","10ml aceite"],
+pasos:["Hierve agua con sal y cocina los fideos segun el paquete. Escurre y reserva.","Desmenuza el seitan churrasco con las manos en trozos pequeños.","Calienta el aceite y dora la cebolla 3 min hasta transparente.","Agrega el seitan desmenuzado y dora a fuego alto 3-4 min.","Añade la salsa de tomate, baja el fuego y cocina 5 min. Sirve sobre los fideos."],
+tip:"Desmenuzar el seitan con las manos (no cortar) da textura fibrosa mas similar a carne picada."},
+{cat:"cena",e:"&#127875;",n:"Crema de Zapallo Camote con Tofu",t:"30 min",k:"~580 kcal",
+ing:["220g zapallo camote en cubos","100g zanahoria en cubos","50g cebolla","10ml aceite","150g tofu artesanal para crutones","Agua c/n, sal, comino"],
+pasos:["Dora la cebolla en aceite en una olla. Agrega el zapallo y zanahoria.","Cubre con agua hasta superar los vegetales, tapa y cocina 20 min hasta que todo este tierno.","Licua hasta obtener crema homogenea. Ajusta sal y comino.","Corta el tofu en cubos pequeños, seca bien y dora en sarten caliente hasta crocante.","Sirve la crema caliente con los crutones de tofu encima."],
+tip:"Esta crema se puede preparar en doble cantidad y guardar 3 dias en la nevera. Los crutones de tofu, siempre frescos al momento."},
+{cat:"cena",e:"&#129385;",n:"Wok de Seitan Parrillero",t:"15 min",k:"~610 kcal",
+ing:["150g seitan parrillero en tiras","100g zanahoria en bastones","100g cebolla en pluma","10ml aceite","Salsa de soja y ajo opcional"],
+pasos:["Calienta la sarten o wok a fuego MUY alto hasta que humee ligeramente.","Agrega el aceite y el seitan. Dora sin mover 2-3 min.","Incorpora la cebolla y zanahoria. Saltea a fuego alto 4-5 min moviendo constantemente.","Agrega salsa de soja si deseas. Sirve inmediatamente."],
+tip:"El secreto del wok es fuego muy alto y poca cantidad a la vez. El sellado crea la reaccion de Maillard que da sabor y mejora la digestibilidad."},
+{cat:"cena",e:"&#127820;",n:"Pure Rustico de Papas",t:"25 min",k:"~200 kcal",
+ing:["220g papas con piel","10ml aceite de maravilla","Sal a gusto"],
+pasos:["Lava muy bien las papas con cepillo bajo el grifo.","Cocinalas enteras con piel en agua con sal 20-25 min hasta que al pinchar esten tiernas.","Escurre y aplasta con tenedor — no uses procesadora, el objetivo es textura rustica con trozos.","Agrega el aceite y mezcla. Rectifica sal."],
+tip:"La piel de la papa concentra el potasio (previene calambres musculares) y la fibra para la microbiota. Nunca la descases."},
+{cat:"cena",e:"&#127836;",n:"Tofu Revuelto con Fideos",t:"20 min",k:"~555 kcal",
+ing:["70g fideos","200g tofu artesanal desmenuzado","50g cebolla picada","50g tomate en cubos","10ml aceite","Curcuma, sal, ajo"],
+pasos:["Cocina los fideos en agua hirviendo con sal. Escurre y reserva.","Desmenuza el tofu con las manos.","Dora la cebolla en aceite, agrega el tomate y cocina 3 min.","Incorpora el tofu desmenuzado, añade curcuma para color amarillo, sazona y cocina 4-5 min a fuego medio-alto.","Mezcla con los fideos y sirve."],
+tip:"La curcuma da al tofu color dorado similar al huevo revuelto. La pimienta negra aumenta la absorcion de curcumina hasta 20x."},
+{cat:"cena",e:"&#127861;",n:"Sopa de Fideos con Tofu",t:"25 min",k:"~580 kcal",
+ing:["70g fideos","100g tofu en cubos","100g zapallo camote en cubos","50g cebolla picada","50g zanahoria en rodajas","5ml aceite","Agua o caldo vegetal c/n","Laurel, perejil, sal"],
+pasos:["Sofrie la cebolla en aceite 2 min. Agrega zanahoria y zapallo camote.","Cubre con agua hasta tener unos 600ml de liquido. Agrega una hoja de laurel.","Cuando hierva, agrega los fideos y el tofu en cubos.","Cocina a fuego medio 8-10 min hasta que los fideos esten al dente.","Rectifica sal, retira el laurel y sirve con perejil fresco."],
+tip:"El zapallo camote se deshace parcialmente y espesa el caldo naturalmente, aportando dulzor y betacarotenos."}
+];
+var rcatFil="todas";
 var today=new Date();
 var ti=today.getDay()===0?6:today.getDay()-1;
 var sd=ti,cf="all";
@@ -428,6 +547,7 @@ function go(id,btn){
   if(btn)btn.classList.add("active");
   if(id==="semana")renderSemana(sd);
   if(id==="compras")rg();
+  if(id==="recetas")renderRecetas(rcatFil,null);
 }
 function initHoy(){
   var h=today.getHours();
@@ -543,7 +663,52 @@ function rg(){
   con.innerHTML=html;
   con.onclick=function(e){var el=e.target.closest("[data-id]");if(!el)return;var id=el.getAttribute("data-id");if(!id)return;chk[id]=!chk[id];sc2();rg();};
 }
-initHoy();initSemana();rg();
+function ajustarAgua(delta){
+  var n=Math.max(0,Math.min(8,waterCount+delta));
+  setWater(n);
+}
+function calcRacha(){
+  var racha=0;
+  var d=new Date(today);
+  for(var i=0;i<30;i++){
+    d.setDate(today.getDate()-i);
+    var k=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+    if(localStorage.getItem("wo_"+k)==="1"){racha++;}else{break;}
+  }
+  return racha;
+}
+function renderRacha(){
+  var bar=document.getElementById("racha-bar");
+  if(!bar)return;
+  var r=calcRacha();
+  var txt=r===0?"Empieza hoy tu primera racha":r===1?"1 dia consecutivo — &#128293; primer paso!":r+" dias consecutivos — &#129351; racha activa!";
+  var ic=r===0?"&#128168;":r<3?"&#129395;":"&#128293;";
+  bar.innerHTML='<div class="racha-ic">'+ic+'</div><div class="racha-info"><div class="racha-n">Racha de ejercicio</div><div class="racha-s">'+txt+'</div></div>';
+}
+function renderRecetas(cat,btn){
+  rcatFil=cat;
+  if(btn){document.querySelectorAll("#rec-tabs .fb").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");}
+  var fil=cat==="todas"?recetas:recetas.filter(function(r){return r.cat===cat;});
+  var html="";
+  fil.forEach(function(r){
+    html+='<div class="rec-card"><div class="rec-head" onclick="toggleRec(this.parentNode)">';
+    html+='<div class="rec-emoji">'+r.e+'</div>';
+    html+='<div class="rec-info"><div class="rec-name">'+r.n+'</div><div class="rec-meta">&#9201; '+r.t+' &middot; '+r.k+'</div></div>';
+    html+='<div class="rec-arrow">&#8250;</div></div>';
+    html+='<div class="rec-body">';
+    html+='<div class="rec-stit">Ingredientes (1 porcion)</div><ul class="rec-ing">';
+    r.ing.forEach(function(i){html+='<li>'+i+'</li>';});
+    html+='</ul><div class="rec-stit">Preparacion paso a paso</div><ol class="rec-steps">';
+    r.pasos.forEach(function(p){html+='<li>'+p+'</li>';});
+    html+='</ol>';
+    if(r.tip)html+='<div class="rec-tip">'+r.tip+'</div>';
+    html+='</div></div>';
+  });
+  if(!html)html='<div style="text-align:center;padding:28px;color:var(--muted);font-size:.83rem;">Sin recetas en esta categoria.</div>';
+  document.getElementById("rec-list").innerHTML=html;
+}
+function toggleRec(card){card.classList.toggle("open");}
+initHoy();initSemana();renderRecetas("todas",null);renderRacha();rg();
 </script>
 </body>
 </html>
