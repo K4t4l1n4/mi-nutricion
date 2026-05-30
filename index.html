@@ -185,12 +185,35 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .racha-n{font-size:.82rem;font-weight:700;color:var(--ink);}
 .racha-s{font-size:.68rem;color:var(--muted);}
 /* DARK MODE */
-body.dark{--cream:#181e1a;--card:#222a24;--ink:#ddeedd;--muted:#7a9a7e;--border:rgba(122,158,126,0.2);}
-body.dark .bnav{background:rgba(28,36,30,.97);}
-body.dark .ph{background:linear-gradient(to bottom,#181e1a 82%,transparent);}
+body.dark{--cream:#181e1a;--card:#222a24;--ink:#ddeedd;--muted:#8aaa8e;--border:rgba(122,158,126,0.22);}
+body.dark::before{opacity:.35;}
+body.dark .bnav{background:rgba(26,32,28,.98);}
+body.dark .ph{background:linear-gradient(to bottom,#181e1a 85%,transparent);}
 body.dark .mstrip{background:#222a24;}
+/* Textos con color fijo — hacerlos legibles en oscuro */
+body.dark .md2,body.dark .ir,body.dark .tw,body.dark .tc p,
+body.dark .sb,body.dark .bd,body.dark .rx,body.dark .gd,
+body.dark .rec-ing li,body.dark .rec-steps li{color:rgba(200,230,200,.82);}
+body.dark .rr{color:rgba(200,230,200,.75);}
+body.dark .gn{color:#ddeedd;}
+/* Cards y contenedores */
+body.dark .card,body.dark .ib,body.dark .tc,body.dark .racha-bar{background:#222a24;}
+body.dark .gi{background:#222a24;}
+body.dark .gi.chk{background:rgba(122,158,126,.15);}
+body.dark .wc{background:rgba(34,42,36,.85);}
+body.dark .sbox{background:rgba(34,42,36,.8);border-color:rgba(122,158,126,.15);}
+body.dark .wb{background:rgba(196,131,90,.06);border-color:rgba(196,131,90,.18);}
+body.dark .woc .woi{background:#364840;}
+body.dark .rec-card{background:#222a24;}
+body.dark .rec-tip{background:rgba(196,131,90,.06);border-color:rgba(196,131,90,.18);color:#c8a070;}
+body.dark .dc2{background:#222a24;}
+body.dark .dc2.active{background:var(--sage-dark);}
+/* Checkbox comidas */
+body.dark .comida-chk{background:#1e261f;border-color:rgba(200,230,200,.25);}
+/* Nota */
 body.dark .nota-ta{background:#1e261f;color:#ddeedd;border-color:rgba(122,158,126,.25);}
-body.dark .comida-chk{background:#1e261f;}
+/* Settings */
+body.dark #settings-box{background:#222a24;}
 body.dark .io-btn{color:#2d5a32;}
 /* SETTINGS BUTTON */
 #settings-btn{position:fixed;top:14px;right:16px;z-index:200;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.13);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.05rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
